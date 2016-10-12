@@ -28,6 +28,12 @@
 			<p class="topic-cmt-user">Comentador 3</p>
 			<p class="topic-cmt-text">Nulla facilisi. Proin sapien nisl, imperdiet ac tincidunt sed, dapibus at massa. Aliquam in turpis sed augue aliquam feugiat blandit eget justo. Mauris placerat felis rutrum odio fringilla, at pellentesque urna porta.</p>
 		</div>
+
+		<form class="cmt-form" action="topico" method="post">
+			<input type="hidden" name="id" value="id">
+			<textarea placeholder="Escreva seu comentario..." name="comentario"></textarea>
+			<button>adicionar comentario</button>
+		</form>
 	</div>
 
 </body>
