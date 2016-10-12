@@ -7,18 +7,17 @@
 	<link rel="stylesheet" type="text/css" href="style/forum.css">
 </head>
 <body>
-	<div class="insert-page">
-		<div class="form">
+	<div class="insert-form">
+		<form action="insere" method="post">
 			<p class="form-title">Digite abaixo o conteúdo do novo tópico:</p>
-			<form class="insert-form" action="insere" method="post">
-				<input type="text" placeholder="título" name="titulo"/>
-				<textarea placeholder="digite o conteúdo do tópico aqui..."></textarea>
-				<button>novo tópico</button>
-				<% if (request.getAttribute("msgError") != null) { %>
-					<p class="error">${msgError}</p>
-				<% } %>
-			</form>
-		</div>
+			<input type="text" placeholder="título" name="titulo"/>
+			<textarea placeholder="conteúdo"></textarea>
+			<button>novo tópico</button>
+			<% if (request.getAttribute("msgError") != null) { %>
+				<p class="error">${msgError}</p>
+			<% } %>
+		</form>
+		<p class="insert-link"><a class="insert-link" href="topicos">« Voltar para a lista de tópicos</a></p>
 	</div>
 </body>
 </html>

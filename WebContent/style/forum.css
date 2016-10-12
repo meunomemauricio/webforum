@@ -298,6 +298,72 @@ a.topic-link {
   background: #43A047;
 }
 
+/* New Thread */
+.insert-form {
+	width: 640px;
+	position: relative;
+	z-index: 1;
+	background: #FFFFFF;
+	max-width: 640px;
+	margin: 0 auto 0;
+	padding: 10px;
+	text-align: center;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.insert-form input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.insert-form textarea {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+  resize: vertical;
+}
+.insert-form button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4CAF50;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form button:hover,.form button:active,.form button:focus {
+  background: #43A047;
+}
+
+p.insert-link {
+	text-align: left;
+	margin: 0 0 5px;
+	font-size: 12px;
+}
+
+a.insert-link {
+	text-decoration: none;
+	color: #044807;
+}
+
+
 /* Ranking */
 .ranking {
 	width: 640px;
