@@ -10,7 +10,8 @@
 	<div class="header">
 		<p class="header-link">
 			<span class="header-link-l"><a class="header-link" href="insere">+ Novo Tópico</a></span>
-			<span class="header-link-r"><a href="ranking" class="header-link">Ranking 🏅</a></span>
+			<span class="header-link-c"><a href="ranking" class="header-link">🏅 Ranking</a></span>
+			<span class="header-link-r"><a class="header-link" href="logout">✗ Logout</a></span>
 		</p>
 	</div>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
