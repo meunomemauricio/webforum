@@ -32,7 +32,7 @@ public class CadastroController extends HttpServlet {
 
 		UsuarioDAO usuarios = new GerenciaUsuario();
 		try {
-			usuarios.inserir(new Usuario(login, nome, email, senha));
+			usuarios.inserir(new Usuario(login, email, nome, senha));
 		} catch (RegistroError e) {
 			request.setAttribute("msgError", e.getMessage());
 			doGet(request, response);
