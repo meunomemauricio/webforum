@@ -5,4 +5,5 @@
 	<topico titulo="Terceiro Topico" conteudo="Conteudo Terceiro Topico" login="mauricio"/>
 	<topico titulo="Quarto Topico" conteudo="Conteudo Quarto Topico" login="mauricio"/>
 	<topico titulo="Quinto Topico" conteudo="Conteudo Quinto Topico" login="mauricio"/>
+	<comentario />
 </dataset>

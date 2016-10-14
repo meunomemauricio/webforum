@@ -11,8 +11,8 @@ import java.util.List;
 public class GerenciaTopico implements TopicosDAO {
 
 	private final String insereQuery = "INSERT INTO topico(titulo, conteudo, login) VALUES (?, ?, ?);";
-	private final String listaQuery = "SELECT * FROM public.topico ORDER BY id_topico DESC;";
-	private final String recuperaQuery = "SELECT * FROM public.topico WHERE id_topico=?;";
+	private final String listaQuery = "SELECT * FROM topico ORDER BY id_topico DESC;";
+	private final String recuperaQuery = "SELECT * FROM topico WHERE id_topico=?;";
 
 	static {
 		try {
