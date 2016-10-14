@@ -24,7 +24,10 @@ public class GerenciaUsuario implements UsuarioDAO {
 	}
 
 	@Override
-	public void inserir(Usuario u) {
+	public void inserir(Usuario u) throws RegistroError {
+		if (recuperar(u.getLogin()) != null)
+			throw new RegistroError("Este login já está cadastrado.");
+
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
@@ -75,14 +78,13 @@ public class GerenciaUsuario implements UsuarioDAO {
 		if (u == null) {
 			throw new UsuarioInexistenteError("Usuario não existe");
 		}
-		int novaPontuacao = u.getPontos() + pontos;
 
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
 
 			PreparedStatement stm = con.prepareStatement(adicionaQuery);
-			stm.setInt(1, novaPontuacao);
+			stm.setInt(1, pontos);
 			stm.setString(2, login);
 			stm.executeUpdate();
 		} catch (SQLException ex) {

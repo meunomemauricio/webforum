@@ -8,6 +8,14 @@ public class Usuario {
 	private String _senha;
 	private int _pontos;
 
+	public Usuario(String login, String email, String nome, String senha) {
+		_login = login;
+		_email = email;
+		_nome = nome;
+		_senha = senha;
+		_pontos = 0;
+	}
+
 	public Usuario(String login, String email, String nome, String senha, int pontos) {
 		_login = login;
 		_email = email;

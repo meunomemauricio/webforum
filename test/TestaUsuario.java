@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.GerenciaUsuario;
+import model.RegistroError;
 import model.Usuario;
 import model.UsuarioDAO;
 import model.UsuarioInexistenteError;
@@ -38,11 +39,25 @@ public class TestaUsuario {
 	}
 
 	@Test
-	public void registraNovoUsuario() {
+	public void registraNovoUsuario() throws Exception {
 		setupDatabase("vazio.xml");
 
-		Usuario u = new Usuario("mauricio", "mauricio@mail.com", "Mauricio Freitas", "s3n#A", 0);
+		Usuario u = new Usuario("mauricio", "mauricio@mail.com", "Mauricio Freitas", "s3n#A");
 		_gerUser.inserir(u);
+
+		verificaDatabase("unico_usuario.xml");
+	}
+
+	@Test
+	public void registraLoginJaCadastrado() {
+		setupDatabase("unico_usuario.xml");
+
+		Usuario u = new Usuario("mauricio", "outro@email.com", "Outro Nome", "s3n#A");
+
+		try {
+			_gerUser.inserir(u);
+			fail("Usuario não deveria ter sido inserido.");
+		} catch (RegistroError e) {}
 
 		verificaDatabase("unico_usuario.xml");
 	}
@@ -94,7 +109,16 @@ public class TestaUsuario {
 
 		_gerUser.adicionarPontos("mauricio", 5);
 
-		verificaDatabase("usuario_com_pontos.xml");
+		verificaDatabase("usuario_com_5_pontos.xml");
+	}
+
+	@Test
+	public void adicionaMaisPontos() throws Exception {
+		setupDatabase("usuario_com_5_pontos.xml");
+
+		_gerUser.adicionarPontos("mauricio", 5);
+
+		verificaDatabase("usuario_com_10_pontos.xml");
 	}
 
 	@Test
@@ -119,7 +143,7 @@ public class TestaUsuario {
 
 	@Test
 	public void rankingUmUsuario() {
-		setupDatabase("usuario_com_pontos.xml");
+		setupDatabase("usuario_com_5_pontos.xml");
 
 		List<Usuario> ranking = _gerUser.ranking();
 
