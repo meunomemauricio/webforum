@@ -14,18 +14,15 @@
 			<div class="ranking-cell">Login</div>
 			<div class="ranking-cell">Pontos</div>
 		</div>
-		<div class="ranking-row">
-			<div class="ranking-cell">1</div>
-			<div class="ranking-cell">Iggy Pop</div>
-			<div class="ranking-cell">ziggy</div>
-			<div class="ranking-cell">1000</div>
-		</div>
-		<div class="ranking-row">
-			<div class="ranking-cell">2</div>
-			<div class="ranking-cell">Ian Curtis</div>
-			<div class="ranking-cell">ianzinho56</div>
-			<div class="ranking-cell">700</div>
-		</div>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+		<c:forEach var="pos" items="${ranking}" varStatus="loop">
+			<div class="ranking-row">
+				<div class="ranking-cell">${loop.count}</div>
+				<div class="ranking-cell">${pos.getNome()}</div>
+				<div class="ranking-cell">${pos.getLogin()}</div>
+				<div class="ranking-cell">${pos.getPontos()}</div>
+			</div>
+		</c:forEach>
 	</div>
 </body>
 </html>

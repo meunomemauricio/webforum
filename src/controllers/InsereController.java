@@ -10,12 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.GerenciaTopico;
+import model.GerenciaUsuario;
 import model.Topico;
 import model.TopicosDAO;
+import model.UsuarioDAO;
+import model.UsuarioInexistenteError;
 
 @WebServlet("/insere")
 public class InsereController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	private static final int PONTOS_POR_TOPICO = 10;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,6 +48,14 @@ public class InsereController extends HttpServlet {
 
 		TopicosDAO gerTopicos = new GerenciaTopico();
 		gerTopicos.insere(new Topico(titulo, conteudo, (String) login));
+
+		UsuarioDAO gerUser = new GerenciaUsuario();
+		try {
+			gerUser.adicionarPontos((String) login, PONTOS_POR_TOPICO);
+		} catch (UsuarioInexistenteError e) {
+			response.sendRedirect("logout");
+			return;
+		}
 
 		response.sendRedirect("topicos");
 	}
