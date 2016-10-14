@@ -14,6 +14,14 @@ public class GerenciaTopico implements TopicosDAO {
 	private final String listaQuery = "SELECT * FROM public.topico ORDER BY id_topico DESC;";
 	private final String recuperaQuery = "SELECT * FROM public.topico WHERE id_topico=?;";
 
+	static {
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void insere(Topico topico) {
 		try(Connection con = DriverManager.getConnection(

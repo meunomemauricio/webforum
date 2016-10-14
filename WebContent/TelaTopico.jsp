@@ -9,9 +9,9 @@
 <body>
 	<div class="topic-content">
 		<p class="topic-link"><a class="topic-link" href="topicos">« Voltar para a lista de tópicos</a></p>
-		<p class="topic-title">Lorem ipsum dolor sit amet</p>
-		<p class="topic-user">Postado por: <span class="topic-user">Usuario</span></p>
-		<p class="topic-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi quis est ut mauris molestie pulvinar. Donec hendrerit libero purus, in volutpat risus pharetra quis. Nam eu turpis at neque dignissim suscipit sed sagittis dolor. In fermentum blandit elit, non condimentum dui aliquam a. Nunc sollicitudin velit mauris, at aliquam nisi rhoncus ac. Sed turpis magna, porta eu aliquet sit amet, maximus sed ipsum. Maecenas suscipit at purus in venenatis. Cras efficitur quam vel tincidunt dictum. Nam suscipit sodales velit, non scelerisque felis euismod eget. Nunc quis sem fermentum, condimentum massa sed, ultrices erat. Vivamus auctor, sem a pretium lacinia, neque quam lobortis lectus, sed aliquam ipsum est aliquam tortor.</p>
+		<p class="topic-title">${topico.getTitulo()}</p>
+		<p class="topic-user">Postado por: <span class="topic-user">${topico.getLogin()}</span></p>
+		<p class="topic-text">${topico.getConteudo()}</p>
 	</div>
 	
 	<div class="topic-comments">

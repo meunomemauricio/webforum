@@ -2,7 +2,6 @@ package controllers;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,6 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import model.GerenciaTopico;
+import model.Topico;
+import model.TopicosDAO;
 
 @WebServlet("/topicos")
 public class ListaController extends HttpServlet {
@@ -24,14 +27,16 @@ public class ListaController extends HttpServlet {
 			return;
 		}
 
-		List<String> topicos = new ArrayList<>();
-		topicos.add("Topico1");
-		topicos.add("Topico2");
-		topicos.add("Topico3");
-		topicos.add("Topico4");
-		topicos.add("Topico4");
+		TopicosDAO gerTopicos = new GerenciaTopico();
+		List<Topico> topicos = gerTopicos.listarTopicos();
 		request.setAttribute("listTopicos", topicos);
 		request.getRequestDispatcher("TelaTopicos.jsp").forward(request, response);
 	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
 
 }

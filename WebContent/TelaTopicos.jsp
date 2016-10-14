@@ -16,9 +16,9 @@
 	</div>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 	<c:forEach var="topico" items="${listTopicos}">
-		<a href="topico?id=1" class="list-topic-item">
-			<p class="list-item-title">${topico}</p>
-		    <p class="list-item-user">Por: <span class="list-item-user">Autor</span></p>
+		<a href="topico?id=${topico.getId()}" class="list-topic-item">
+			<p class="list-item-title">${topico.getTitulo()}</p>
+		    <p class="list-item-user">Por: <span class="list-item-user">${topico.getLogin()}</span></p>
 		</a>
 	</c:forEach>
 </body>

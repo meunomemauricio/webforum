@@ -11,7 +11,7 @@
 		<form action="insere" method="post">
 			<p class="form-title">Digite abaixo o conteúdo do novo tópico:</p>
 			<input type="text" placeholder="título" name="titulo"/>
-			<textarea placeholder="conteúdo"></textarea>
+			<textarea placeholder="conteúdo" name="conteudo"></textarea>
 			<button>novo tópico</button>
 			<% if (request.getAttribute("msgError") != null) { %>
 				<p class="error">${msgError}</p>
