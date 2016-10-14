@@ -1,6 +1,10 @@
 package unit;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.File;
+import java.util.List;
 
 import org.dbunit.Assertion;
 import org.dbunit.JdbcDatabaseTester;
@@ -16,6 +20,7 @@ import org.junit.Test;
 import model.GerenciaTopico;
 import model.GerenciaUsuario;
 import model.Topico;
+import model.TopicoInexistente;
 import model.TopicosDAO;
 
 public class TestaTopicos {
@@ -41,6 +46,52 @@ public class TestaTopicos {
 		_gerTopico.insere(topico);
 
 		verificaDatabase("unico_topico.xml");
+	}
+
+	@Test
+	public void recuperaListaComUmTopico() throws Exception {
+		setupDatabase("unico_topico.xml");
+
+		List<Topico> topicos = _gerTopico.listarTopicos();
+
+		assertEquals(1, topicos.size());
+		assertEquals(topicos.get(0).getTitulo(), "Primeiro Topico");
+	}
+
+	@Test
+	public void recuperaListaMultiplosTopicos() throws Exception {
+		setupDatabase("multiplos_topicos.xml");
+
+		List<Topico> topicos = _gerTopico.listarTopicos();
+
+		assertEquals(5, topicos.size());
+		// Garante que a lista é ordenada sendo o topico mais recente primeiro
+		assertEquals(topicos.get(0).getTitulo(), "Quinto Topico");
+		assertEquals(topicos.get(2).getTitulo(), "Terceiro Topico");
+		assertEquals(topicos.get(4).getTitulo(), "Primeiro Topico");
+	}
+
+	@Test
+	public void recuperaTopicoPorIDValida() throws Exception {
+		setupDatabase("unico_topico.xml");
+
+		List<Topico> topicos = _gerTopico.listarTopicos();
+		Topico topicoLista = topicos.get(0);
+		int id = topicoLista.getId();
+
+		Topico topicoRecuperado = _gerTopico.recuperar(id);
+
+		assertEquals(topicoLista, topicoRecuperado);
+	}
+
+	@Test
+	public void recuperarTopicoInexistente() throws Exception {
+		setupDatabase("unico_usuario.xml");
+
+		try {
+			_gerTopico.recuperar(0);
+			fail("Nenhum tópico deveria ter sido recuperado");
+		} catch (TopicoInexistente e) {};
 	}
 
 	private void setupDatabase(String file) {

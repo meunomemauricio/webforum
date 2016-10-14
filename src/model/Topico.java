@@ -37,4 +37,46 @@ public class Topico {
 		return _login;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((_conteudo == null) ? 0 : _conteudo.hashCode());
+		result = prime * result + ((_login == null) ? 0 : _login.hashCode());
+		result = prime * result + ((_titulo == null) ? 0 : _titulo.hashCode());
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Topico [_id=" + _id + ", _titulo=" + _titulo + ", _conteudo=" + _conteudo + ", _login=" + _login + "]";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Topico other = (Topico) obj;
+		if (_conteudo == null) {
+			if (other._conteudo != null)
+				return false;
+		} else if (!_conteudo.equals(other._conteudo))
+			return false;
+		if (_login == null) {
+			if (other._login != null)
+				return false;
+		} else if (!_login.equals(other._login))
+			return false;
+		if (_titulo == null) {
+			if (other._titulo != null)
+				return false;
+		} else if (!_titulo.equals(other._titulo))
+			return false;
+		return true;
+	}
+
 }
