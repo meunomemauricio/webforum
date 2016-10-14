@@ -7,6 +7,9 @@
 	<link rel="stylesheet" type="text/css" href="style/forum.css">
 </head>
 <body>
+	<div class="topic-content">
+		<p class="topic-link"><a class="topic-link" href="topicos">« Voltar para a lista de tópicos</a></p>
+	</div>
 	<div class="ranking">
 		<div class="ranking-row header">
 			<div class="ranking-cell">#</div>
