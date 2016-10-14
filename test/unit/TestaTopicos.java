@@ -18,7 +18,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.GerenciaTopico;
-import model.GerenciaUsuario;
 import model.Topico;
 import model.TopicoInexistente;
 import model.TopicosDAO;
@@ -26,7 +25,7 @@ import model.TopicosDAO;
 public class TestaTopicos {
 
 	private JdbcDatabaseTester _jdt;
-	private TopicosDAO _gerTopico;
+	private TopicosDAO _gerTopico = new GerenciaTopico();
 
 	@Before
 	public void setUp() throws Exception {
@@ -34,8 +33,6 @@ public class TestaTopicos {
 				"org.postgresql.Driver",
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin");
-
-		_gerTopico = new GerenciaTopico(new GerenciaUsuario());
 	}
 
 	@Test

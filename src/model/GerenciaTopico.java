@@ -14,22 +14,8 @@ public class GerenciaTopico implements TopicosDAO {
 	private final String listaQuery = "SELECT * FROM public.topico ORDER BY id_topico DESC;";
 	private final String recuperaQuery = "SELECT * FROM public.topico WHERE id_topico=?;";
 
-	private final int PONTOS_POR_TOPICO = 10;
-
-	private UsuarioDAO _gerUser = new GerenciaUsuario();
-
-	public GerenciaTopico(UsuarioDAO dao) {
-		_gerUser = dao;
-	}
-
 	@Override
 	public void insere(Topico topico) {
-		try {
-			_gerUser.adicionarPontos(topico.getLogin(), PONTOS_POR_TOPICO);
-		} catch (UsuarioInexistenteError e) {
-			e.printStackTrace();
-		}
-
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
