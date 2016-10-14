@@ -15,23 +15,16 @@
 	</div>
 	
 	<div class="topic-comments">
-	    <div class="topic-cmt">
-			<p class="topic-cmt-user">Comentador 1</p>
-			<p class="topic-cmt-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi quis est ut mauris molestie</p>
-		</div>
-
-	    <div class="topic-cmt">
-			<p class="topic-cmt-user">Comentador 2</p>
-			<p class="topic-cmt-text">Duis congue est nisl, id tempor arcu vehicula quis. Maecenas non te</p>
-		</div>
-
-	    <div class="topic-cmt">
-			<p class="topic-cmt-user">Comentador 3</p>
-			<p class="topic-cmt-text">Nulla facilisi. Proin sapien nisl, imperdiet ac tincidunt sed, dapibus at massa. Aliquam in turpis sed augue aliquam feugiat blandit eget justo. Mauris placerat felis rutrum odio fringilla, at pellentesque urna porta.</p>
-		</div>
+		<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+			<c:forEach var="cmnt" items="${comentarios}">
+				<div class="topic-cmt">
+					<p class="topic-cmt-user">${cmnt.getLogin()}</p>
+					<p class="topic-cmt-text">${cmnt.getComentario()}</p>
+				</div>
+			</c:forEach>
 
 		<form class="cmt-form" action="topico" method="post">
-			<input type="hidden" name="id" value="id">
+			<input type="hidden" name="topicoId" value="${topico.getId()}">
 			<textarea placeholder="Escreva seu comentario..." name="comentario"></textarea>
 			<button>adicionar comentario</button>
 		</form>
