@@ -14,7 +14,8 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.util.fileloader.DataFileLoader;
 import org.dbunit.util.fileloader.FlatXmlDataFileLoader;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -24,18 +25,19 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class FunctionalTests {
 
-	private WebDriver _driver;
-	private WebDriverWait _wait;
+	private static WebDriver _driver;
+	private static WebDriverWait _wait;
 
-	private String baseUrl;
-	private StringBuffer verificationErrors = new StringBuffer();
+	private static final String baseUrl = "http://localhost:8080/WebForum/";;
 
-	private JdbcDatabaseTester _jdt;
+	private static StringBuffer verificationErrors = new StringBuffer();
 
-	@Before
-		public void setUp() throws Exception {
+	private static JdbcDatabaseTester _jdt;
+
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
 		_driver = new FirefoxDriver();
-		baseUrl = "http://localhost:8080/";
 		_driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
 		_wait = new WebDriverWait(_driver, 15);
@@ -49,8 +51,11 @@ public class FunctionalTests {
 	@After
 	public void tearDown() throws Exception {
 		// Assegura que usuário não fica logado para o próximo teste
-		_driver.get(baseUrl + "WebForum/logout");
+		vaiParaPagina("logout");
+	}
 
+	@AfterClass
+	public static void tearDownClass() throws Exception {
 		_driver.quit();
 		String verificationErrorString = verificationErrors.toString();
 		if (!"".equals(verificationErrorString)) {
@@ -62,13 +67,9 @@ public class FunctionalTests {
 	public void registraNovoUsuario() throws Exception {
 		setupDatabase("vazio.xml");
 
-		_driver.get(baseUrl + "WebForum/cadastro");
-		_driver.findElement(By.name("login")).sendKeys("mauricio");
-		_driver.findElement(By.name("senha")).sendKeys("s3n#A");
-		_driver.findElement(By.name("nome")).sendKeys("Mauricio Freitas");
-		_driver.findElement(By.name("email")).sendKeys("mauricio@mail.com");
-		_driver.findElement(By.cssSelector("button")).click();
-		_wait.until(ExpectedConditions.titleIs("Login - Web Forum"));
+		vaiParaPagina("cadastro");
+		preencheFormularioCadastro("mauricio", "s3n#A", "Mauricio Freitas", "mauricio@mail.com");
+		aguardaPorTitulo("Login - Web Forum");
 
 		verificaDatabase("unico_usuario.xml");
 	}
@@ -77,10 +78,9 @@ public class FunctionalTests {
 	public void registraUsuarioExistente() throws Exception {
 		setupDatabase("unico_usuario.xml");
 
-		_driver.get(baseUrl + "WebForum/cadastro");
-		_driver.findElement(By.name("login")).sendKeys("mauricio");
-		_driver.findElement(By.cssSelector("button")).click();
-		_wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("p.error")));
+		vaiParaPagina("cadastro");
+		preencheFormularioCadastro("mauricio", "s3n#A", "Mauricio Freitas", "mauricio@mail.com");
+		aguardaPorMsgErro();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
 	    assertEquals("Este login já está cadastrado.", error_msg);
@@ -92,23 +92,17 @@ public class FunctionalTests {
 	public void loginBemSucedido() throws Exception {
 		setupDatabase("unico_usuario.xml");
 
-		_driver.get(baseUrl + "WebForum/login");
-		_driver.findElement(By.name("login")).sendKeys("mauricio");
-		_driver.findElement(By.name("senha")).sendKeys("s3n#A");
-		_driver.findElement(By.cssSelector("button")).click();
+		fazLogin("mauricio", "s3n#A");
 
-		_wait.until(ExpectedConditions.titleIs("Tópicos - Web Forum"));
+		aguardaPorTitulo("Tópicos - Web Forum");
 	}
 
 	@Test
 	public void loginUsuarioNaoRegistrado() throws Exception {
 		setupDatabase("unico_usuario.xml");
 
-		_driver.get(baseUrl + "WebForum/login");
-		_driver.findElement(By.name("login")).sendKeys("inexistente");
-		_driver.findElement(By.name("senha")).sendKeys("senhaqualquer");
-		_driver.findElement(By.cssSelector("button")).click();
-		_wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("p.error")));
+		fazLogin("inexistente", "senhaqualquer");
+		aguardaPorMsgErro();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
 	    assertEquals("Não foi possível autenticar o usuário", error_msg);
@@ -118,11 +112,8 @@ public class FunctionalTests {
 	public void loginSenhaErrada() throws Exception {
 		setupDatabase("unico_usuario.xml");
 
-		_driver.get(baseUrl + "WebForum/login");
-		_driver.findElement(By.name("login")).sendKeys("mauricio");
-		_driver.findElement(By.name("senha")).sendKeys("senhaerrada");
-		_driver.findElement(By.cssSelector("button")).click();
-		_wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("p.error")));
+		fazLogin("mauricio", "senhaerrada");
+		aguardaPorMsgErro();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
 	    assertEquals("Não foi possível autenticar o usuário", error_msg);
@@ -130,11 +121,87 @@ public class FunctionalTests {
 
 	@Test
 	public void acessaTopicosSemLogar() throws Exception {
-		_driver.get(baseUrl + "WebForum/topicos");
-		_wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("p.error")));
+		vaiParaPagina("topicos");
+		aguardaPorMsgErro();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
 	    assertEquals("É necessário estar logado para acessar aquela página.", error_msg);
+	}
+
+	@Test
+	public void criaNovoTopico() throws Exception {
+		setupDatabase("unico_usuario.xml");
+
+		fazLogin("mauricio", "s3n#A");
+		aguardaPorTitulo("Tópicos - Web Forum");
+
+		_driver.findElement(By.linkText("+ Novo Tópico")).click();
+		aguardaPorTitulo("Novo Tópico - Web Forum");
+
+		preencheFormularioTopico("Primeiro Topico", "Conteudo Primeiro Topico");
+		aguardaPorTitulo("Tópicos - Web Forum");
+
+		String titulo = _driver.findElement(By.cssSelector("p.list-item-title")).getText();
+		assertEquals("Primeiro Topico", titulo);
+	}
+
+	@Test
+	public void criaNovoComentario() throws Exception {
+		setupDatabase("unico_topico.xml");
+
+		fazLogin("mauricio", "s3n#A");
+		aguardaPorTitulo("Tópicos - Web Forum");
+
+		_driver.findElement(By.cssSelector("p.list-item-title")).click();
+		aguardaPorTitulo("Primeiro Topico - Web Forum");
+
+	    preencheComentario("Primeiro Comentario");
+	    _wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.topic-cmt")));
+
+	    String comentario = _driver.findElement(By.cssSelector("p.topic-cmt-text")).getText();
+		assertEquals("Primeiro Comentario", comentario);
+	}
+
+	private void vaiParaPagina(String pagina) {
+		_driver.get(baseUrl + pagina);
+	}
+
+	private void fazLogin(String login, String senha) {
+		vaiParaPagina("login");
+		_driver.findElement(By.name("login")).sendKeys(login);
+		_driver.findElement(By.name("senha")).sendKeys(senha);
+		_driver.findElement(By.cssSelector("button")).click();
+	}
+
+	private void aguardaPorTitulo(String titulo) {
+		_wait.until(ExpectedConditions.titleIs(titulo));
+	}
+
+	private void aguardaPorMsgErro() {
+		_wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("p.error")));
+	}
+
+	private void preencheFormularioCadastro(String login, String senha, String nome, String email) {
+		_driver.findElement(By.name("login")).sendKeys(login);
+		_driver.findElement(By.name("senha")).sendKeys(senha);
+		_driver.findElement(By.name("nome")).sendKeys(nome);
+		_driver.findElement(By.name("email")).sendKeys(email);
+		_driver.findElement(By.cssSelector("button")).click();
+	}
+
+	private void preencheFormularioTopico(String titulo, String conteudo) {
+		_driver.findElement(By.name("titulo")).clear();
+		_driver.findElement(By.name("conteudo")).clear();
+		_driver.findElement(By.name("titulo")).sendKeys(titulo);
+		_driver.findElement(By.name("conteudo")).sendKeys(conteudo);
+		_driver.findElement(By.cssSelector("button")).click();
+	}
+
+
+	private void preencheComentario(String comentario) {
+		_driver.findElement(By.name("comentario")).clear();
+	    _driver.findElement(By.name("comentario")).sendKeys(comentario);
+	    _driver.findElement(By.cssSelector("button")).click();
 	}
 
 	private void setupDatabase(String file) {
