@@ -19,7 +19,6 @@
 	margin: 0 0 10px;
 }
 .form input {
-  font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
   width: 100%;
@@ -30,7 +29,6 @@
   font-size: 14px;
 }
 .form textarea {
-  font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
   width: 100%;
@@ -40,38 +38,38 @@
   box-sizing: border-box;
   font-size: 14px;
   resize: vertical;
+  font-family: "Roboto", sans-serif;
 }
 .form button {
-  font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #4CAF50;
+  background: #2196f3;
   width: 100%;
   border: 0;
   padding: 15px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 14px;
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
 }
 .form button:hover,.form button:active,.form button:focus {
-  background: #43A047;
+  background: #42a5f5;
 }
 .form .message {
   margin: 15px 0 0;
-  color: #b3b3b3;
-  font-size: 12px;
+  color: #424242;
+  font-size: 14px;
 }
 .form .message a {
-  color: #4CAF50;
+  color: #1976d2;
   text-decoration: none;
 }
 .form .error {
 	margin-top: 10px;
 	margin-bottom: 0;
-	color: #ef3b3a;
-	font-size: 14px;
+	color: #f44336;
+	font-size: 16px;
 }
 .container {
   position: relative;
@@ -107,14 +105,8 @@
   color: #EF3B3A;
 }
 body {
-  background: #76b852; /* fallback for old browsers */
-  background: -webkit-linear-gradient(right, #76b852, #8DC26F);
-  background: -moz-linear-gradient(right, #76b852, #8DC26F);
-  background: -o-linear-gradient(right, #76b852, #8DC26F);
-  background: linear-gradient(to left, #76b852, #8DC26F);
+  background: #212121;
   font-family: "Roboto", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;      
 }
 
 /* Lista de Tópicos */
@@ -122,7 +114,7 @@ body {
 	width: 640px;
 	position: relative;
 	z-index: 1;
-	background: #FFFFFF;
+	background: #2196f3;
 	max-width: 640px;
 	margin: 0 auto 1px;
 	padding: 5px 10px 1px;
@@ -152,7 +144,8 @@ span.header-link-r {
 
 a.header-link {
 	text-decoration: none;
-	color: #044807;
+	color: #ffffff;
+	font-weight: bold;
 }
 
 .list-topic-item {
@@ -173,7 +166,7 @@ a.header-link {
 	font-size: 24pt;
 	text-align: left;
 	margin: 10px 10px 0;
-	color: #8dc26f;
+	color: #2196f3;
 	word-wrap: break-word;
 }
 
@@ -205,7 +198,7 @@ span.list-item-user {
 	font-size: 24pt;
 	text-align: left;
 	margin: 5px 10px 0;
-	color: #8dc26f;
+	color: #2196f3;
 }
 
 p.topic-user {
@@ -229,7 +222,7 @@ p.topic-link {
 
 a.topic-link {
 	text-decoration: none;
-	color: #044807;
+	color: #1976d2;
 }
 
 .topic-text {
@@ -276,7 +269,6 @@ a.topic-link {
 }
 
 .cmt-form textarea {
-  font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
   width: 100%;
@@ -286,12 +278,12 @@ a.topic-link {
   box-sizing: border-box;
   font-size: 14px;
   resize: vertical;
+  font-family: "Roboto", sans-serif;
 }
 .cmt-form button {
-  font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #4CAF50;
+  background: #2196f3;
   width: 100%;
   border: 0;
   padding: 15px;
@@ -301,8 +293,8 @@ a.topic-link {
   transition: all 0.3 ease;
   cursor: pointer;
 }
-.form button:hover,.form button:active,.form button:focus {
-  background: #43A047;
+.cmt-form button:hover,.cmt-form button:active,.cmt-form button:focus {
+  background: #42a5f5;
 }
 
 /* New Thread */
@@ -319,7 +311,6 @@ a.topic-link {
 }
 
 .insert-form input {
-  font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
   width: 100%;
@@ -330,7 +321,6 @@ a.topic-link {
   font-size: 14px;
 }
 .insert-form textarea {
-  font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
   width: 100%;
@@ -340,12 +330,12 @@ a.topic-link {
   box-sizing: border-box;
   font-size: 14px;
   resize: vertical;
+  font-family: "Roboto", sans-serif;
 }
 .insert-form button {
-  font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #4CAF50;
+  background: #2196f3;
   width: 100%;
   border: 0;
   padding: 15px;
@@ -355,8 +345,8 @@ a.topic-link {
   transition: all 0.3 ease;
   cursor: pointer;
 }
-.form button:hover,.form button:active,.form button:focus {
-  background: #43A047;
+.insert-form button:hover,.insert-form button:active,.insert-form button:focus {
+  background: #42a5f5;
 }
 
 p.insert-link {
@@ -367,7 +357,7 @@ p.insert-link {
 
 a.insert-link {
 	text-decoration: none;
-	color: #044807;
+	color: #1976d2;
 }
 
 
@@ -388,7 +378,7 @@ a.insert-link {
 .ranking-row.header {
       font-weight: 900;
       color: #ffffff;
-      background: #ea6153;
+      background: #2196f3;
 }
 .ranking-cell {  
 	padding: 6px 12px;
@@ -412,7 +402,7 @@ a.insert-link {
 .erro-code {
 	font-size: 120pt;
 	margin: 100px 0 25px;
-	color: #8dc26f;
+	color: #2196f3;
 }
 
 .erro-msg {

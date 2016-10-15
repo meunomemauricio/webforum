@@ -17,7 +17,7 @@
 				<% if (request.getAttribute("msgError") != null) { %>
 					<p class="error">${msgError}</p>
 				<% } %>
-				<p class="message">Não está registrado ainda? <a href="cadastro">Criar uma conta.</a></p>
+				<p class="message">Não se registrou? <a href="cadastro">Criar uma conta.</a></p>
 			</form>
 		</div>
 	</div>
