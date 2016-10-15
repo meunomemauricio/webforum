@@ -18,8 +18,8 @@
 		<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 			<c:forEach var="cmnt" items="${comentarios}">
 				<div class="topic-cmt">
-					<p class="topic-cmt-user">${cmnt.getLogin()}</p>
 					<p class="topic-cmt-text">${cmnt.getComentario()}</p>
+					<p class="topic-cmt-user">${cmnt.getLogin()}</p>
 				</div>
 			</c:forEach>
 
