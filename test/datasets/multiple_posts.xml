@@ -1,5 +1,5 @@
 <dataset>
-	<users login="mauricio" name="Mauricio Freitas" email="mauricio@mail.com" password="s3n#A" points="10"/>
+	<users login="mauricio" name="Mauricio Freitas" email="mauricio@mail.com" password="p4$$w0rd" points="10"/>
 	<posts title="First Post" content="First Post Content" login="mauricio"/>
 	<posts title="Second Post" content="Second Post Content" login="mauricio"/>
 	<posts title="Third Post" content="Third Post Content" login="mauricio"/>

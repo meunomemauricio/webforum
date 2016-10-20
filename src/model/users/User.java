@@ -2,6 +2,8 @@ package model.users;
 
 public class User {
 
+	private static final int MIN_PW_LENGTH = 8;
+
 	private String _login;
 	private String _email;
 	private String _name;
@@ -42,6 +44,11 @@ public class User {
 
 	public int getPoints() {
 		return _points;
+	}
+
+	protected void validatePassword() throws RegistrationError {
+		if(_password.length() < MIN_PW_LENGTH)
+			throw new RegistrationError("Password too short");
 	}
 
 }

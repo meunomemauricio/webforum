@@ -69,7 +69,7 @@ public class FunctionalTests {
 		setupDatabase("empty_db.xml");
 
 		goToPage("register");
-		fillRegisterForm("mauricio", "s3n#A", "Mauricio Freitas", "mauricio@mail.com");
+		fillRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
 		waitForTitle("Login - Web Forum");
 
 		assertDatabase("only_user.xml");
@@ -80,7 +80,7 @@ public class FunctionalTests {
 		setupDatabase("only_user.xml");
 
 		goToPage("register");
-		fillRegisterForm("mauricio", "s3n#A", "Mauricio Freitas", "mauricio@mail.com");
+		fillRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
 		waitUntilErrorMessage();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
@@ -90,10 +90,24 @@ public class FunctionalTests {
 	}
 
 	@Test
+	public void registerUserWithShortPassword() throws Exception {
+		setupDatabase("empty_db.xml");
+
+		goToPage("register");
+		fillRegisterForm("mauricio", "123457", "Mauricio Freitas", "mauricio@mail.com");
+		waitUntilErrorMessage();
+
+		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
+	    assertEquals("Password too short", error_msg);
+
+		setupDatabase("empty_db.xml");
+	}
+
+	@Test
 	public void sucessfulLogin() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "s3n#A");
+		doLogin("mauricio", "p4$$w0rd");
 
 		waitForTitle("Posts - Web Forum");
 	}
@@ -133,7 +147,7 @@ public class FunctionalTests {
 	public void createNewPost() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "s3n#A");
+		doLogin("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.linkText("+ New Post")).click();
@@ -150,7 +164,7 @@ public class FunctionalTests {
 	public void createNewComment() throws Exception {
 		setupDatabase("only_post.xml");
 
-		doLogin("mauricio", "s3n#A");
+		doLogin("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.cssSelector("p.list-item-title")).click();

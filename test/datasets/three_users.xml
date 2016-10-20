@@ -1,7 +1,7 @@
 <dataset>
-	<users login="joao" email="joao@mail.com" name="Joao" password="joao123" points="15" />
-	<users login="jose" email="jose@mail.com" name="Jose" password="jose123" points="5" />
-	<users login="maria" email="maria@mail.com" name="Maria" password="maria123" points="10" />
+	<users login="joao" email="joao@mail.com" name="Joao" password="joao1234" points="15" />
+	<users login="jose" email="jose@mail.com" name="Jose" password="jose1234" points="5" />
+	<users login="maria" email="maria@mail.com" name="Maria" password="maria1234" points="10" />
 	<posts />
 	<comments />
 </dataset>

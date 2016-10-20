@@ -43,7 +43,7 @@ public class TestUsers {
 	public void registerNewUser() throws Exception {
 		setupDatabase("empty_db.xml");
 
-		User u = new User("mauricio", "mauricio@mail.com", "Mauricio Freitas", "s3n#A");
+		User u = new User("mauricio", "mauricio@mail.com", "Mauricio Freitas", "p4$$w0rd");
 		_userMgmt.insert(u);
 
 		verificaDatabase("only_user.xml");
@@ -53,7 +53,7 @@ public class TestUsers {
 	public void registerAlreadyExistingUser() {
 		setupDatabase("only_user.xml");
 
-		User u = new User("mauricio", "another@email.com", "Another Name", "s3n#A");
+		User u = new User("mauricio", "another@email.com", "Another Name", "p4$$w0rd");
 
 		try {
 			_userMgmt.insert(u);
@@ -61,6 +61,21 @@ public class TestUsers {
 		} catch (RegistrationError e) {}
 
 		verificaDatabase("only_user.xml");
+	}
+
+	@Test
+	public void registerUserWithShortPassword() {
+		setupDatabase("empty_db.xml");
+
+		// Password lower limit should be 8 chars
+		User u = new User("mauricio", "mauricio@mail.com", "Mauricio Freitas", "1234567");
+
+		try {
+			_userMgmt.insert(u);
+			fail("Short password should not be accepted.");
+		} catch (RegistrationError e) {}
+
+		verificaDatabase("empty_db.xml");
 	}
 
 	@Test
@@ -72,7 +87,7 @@ public class TestUsers {
 		assertEquals("mauricio", u.getLogin());
 		assertEquals("mauricio@mail.com", u.getEmail());
 		assertEquals("Mauricio Freitas", u.getName());
-		assertEquals("s3n#A", u.getPassword());
+		assertEquals("p4$$w0rd", u.getPassword());
 		assertEquals(0, u.getPoints());
 	}
 
@@ -94,7 +109,7 @@ public class TestUsers {
 	public void authenticateUserWithCorrectCredentials(){
 		setupDatabase("only_user.xml");
 
-		assertTrue(_userMgmt.authenticate("mauricio", "s3n#A"));
+		assertTrue(_userMgmt.authenticate("mauricio", "p4$$w0rd"));
 	}
 
 	@Test
@@ -175,9 +190,9 @@ public class TestUsers {
 	public void smallOverallTest() throws Exception {
 		setupDatabase("empty_db.xml");
 
-		_userMgmt.insert(new User("joao", "joao@mail.com", "Joao", "joao123", 0));
-		_userMgmt.insert(new User("jose", "jose@mail.com", "Jose", "jose123", 0));
-		_userMgmt.insert(new User("maria", "maria@mail.com", "Maria", "maria123", 0));
+		_userMgmt.insert(new User("joao", "joao@mail.com", "Joao", "joao1234", 0));
+		_userMgmt.insert(new User("jose", "jose@mail.com", "Jose", "jose1234", 0));
+		_userMgmt.insert(new User("maria", "maria@mail.com", "Maria", "maria1234", 0));
 
 		_userMgmt.addPoints("joao", 15);
 		_userMgmt.addPoints("jose", 5);

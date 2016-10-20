@@ -6,9 +6,9 @@ GRANT ALL ON SCHEMA public TO public;
 CREATE TABLE users
 (
   login text NOT NULL,
+  password text NOT NULL,
   email text,
   name text,
-  password text,
   points integer,
   CONSTRAINT user_pkey PRIMARY KEY (login)
 );

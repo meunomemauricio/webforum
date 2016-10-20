@@ -28,6 +28,8 @@ public class UserManager implements UserDAO {
 		if (retrieve(u.getLogin()) != null)
 			throw new RegistrationError("Login already registered");
 
+		u.validatePassword();
+
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
