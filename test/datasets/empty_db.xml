@@ -1,5 +1,5 @@
 <dataset>
-	<usuario />
-	<topico />
-	<comentario />
+	<users />
+	<posts />
+	<comments />
 </dataset>

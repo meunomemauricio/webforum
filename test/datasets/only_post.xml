@@ -1,5 +1,5 @@
 <dataset>
-	<usuario login="mauricio" nome="Mauricio Freitas" email="mauricio@mail.com" senha="s3n#A" pontos="0"/>
-	<topico titulo="First Post" conteudo="First Post Content" login="mauricio"/>
-	<comentario />
+	<users login="mauricio" name="Mauricio Freitas" email="mauricio@mail.com" password="s3n#A" points="0"/>
+	<posts title="First Post" content="First Post Content" login="mauricio"/>
+	<comments />
 </dataset>

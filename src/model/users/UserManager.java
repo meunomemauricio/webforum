@@ -10,10 +10,10 @@ import java.util.List;
 
 public class UserManager implements UserDAO {
 
-	private final String insertQuery = "INSERT INTO usuario(login, email, nome, senha, pontos) VALUES (?, ?, ?, ?, ?);";
-	private final String retrieveQuery = "SELECT * FROM usuario WHERE login = ?;";
-	private final String addPointQuery = "UPDATE usuario SET pontos = pontos + ? WHERE login = ?;";
-	private final String rankingQuery = "SELECT * FROM usuario ORDER BY pontos DESC;";
+	private final String insertQuery = "INSERT INTO users(login, email, name, password, points) VALUES (?, ?, ?, ?, ?);";
+	private final String retrieveQuery = "SELECT * FROM users WHERE login = ?;";
+	private final String addPointQuery = "UPDATE users SET points = points + ? WHERE login = ?;";
+	private final String rankingQuery = "SELECT * FROM users ORDER BY points DESC;";
 
 	static {
 		try {
@@ -54,7 +54,7 @@ public class UserManager implements UserDAO {
 			if (!rs.next()) {
 				return null;
 			}
-			return resultSet2Usuario(rs);
+			return resultSet2Users(rs);
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -102,7 +102,7 @@ public class UserManager implements UserDAO {
 			PreparedStatement stm = con.prepareStatement(rankingQuery);
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
-				ranking.add(resultSet2Usuario(rs));
+				ranking.add(resultSet2Users(rs));
 			}
 			return ranking;
 		} catch (SQLException ex) {
@@ -110,12 +110,12 @@ public class UserManager implements UserDAO {
 		}
 	}
 
-	private User resultSet2Usuario(ResultSet rs) throws SQLException {
+	private User resultSet2Users(ResultSet rs) throws SQLException {
 		String login = rs.getString("login");
 		String email = rs.getString("email");
-		String name = rs.getString("nome");
-		String password = rs.getString("senha");
-		int points = rs.getInt("pontos");
+		String name = rs.getString("name");
+		String password = rs.getString("password");
+		int points = rs.getInt("points");
 
 		return new User(login, email, name, password, points);
 	}

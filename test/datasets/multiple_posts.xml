@@ -1,9 +1,9 @@
 <dataset>
-	<usuario login="mauricio" nome="Mauricio Freitas" email="mauricio@mail.com" senha="s3n#A" pontos="10"/>
-	<topico titulo="First Post" conteudo="First Post Content" login="mauricio"/>
-	<topico titulo="Second Post" conteudo="Second Post Content" login="mauricio"/>
-	<topico titulo="Third Post" conteudo="Third Post Content" login="mauricio"/>
-	<topico titulo="Fourth Post" conteudo="Fourth Post Content" login="mauricio"/>
-	<topico titulo="Fifth Post" conteudo="Fifth Post Content" login="mauricio"/>
-	<comentario />
+	<users login="mauricio" name="Mauricio Freitas" email="mauricio@mail.com" password="s3n#A" points="10"/>
+	<posts title="First Post" content="First Post Content" login="mauricio"/>
+	<posts title="Second Post" content="Second Post Content" login="mauricio"/>
+	<posts title="Third Post" content="Third Post Content" login="mauricio"/>
+	<posts title="Fourth Post" content="Fourth Post Content" login="mauricio"/>
+	<posts title="Fifth Post" content="Fifth Post Content" login="mauricio"/>
+	<comments />
 </dataset>

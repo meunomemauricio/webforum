@@ -49,7 +49,7 @@ public class Post {
 
 	@Override
 	public String toString() {
-		return "Topico [_id=" + _id + ", _titulo=" + _title + ", _conteudo=" + _content + ", _login=" + _login + "]";
+		return "Topico [_id=" + _id + ", _title=" + _title + ", _content=" + _content + ", _login=" + _login + "]";
 	}
 
 	@Override

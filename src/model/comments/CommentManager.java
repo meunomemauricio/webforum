@@ -10,8 +10,8 @@ import java.util.List;
 
 public class CommentManager implements CommentsDAO {
 
-	private final String insertQuery = "INSERT INTO comentario(comentario, login, id_topico) VALUES (?, ?, ?);";
-	private final String recoverQuery = "SELECT * FROM comentario WHERE id_topico=? ORDER BY id_comentario ASC;";
+	private final String insertQuery = "INSERT INTO comments(content, login, post_id) VALUES (?, ?, ?);";
+	private final String recoverQuery = "SELECT * FROM comments WHERE post_id=? ORDER BY comment_id ASC;";
 
 	static {
 		try {
@@ -46,10 +46,10 @@ public class CommentManager implements CommentsDAO {
 			stm.setInt(1, postId);
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
-				String comentario = rs.getString("comentario");
+				String content = rs.getString("content");
 				String login = rs.getString("login");
-				int id = rs.getInt("id_topico");
-				comments.add(new Comment(id, comentario, login, postId));
+				int id = rs.getInt("post_id");
+				comments.add(new Comment(id, content, login, postId));
 			}
 			return comments;
 		} catch (SQLException ex) {

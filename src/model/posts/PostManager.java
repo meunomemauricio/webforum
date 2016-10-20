@@ -10,9 +10,9 @@ import java.util.List;
 
 public class PostManager implements PostDAO {
 
-	private final String insertQuery = "INSERT INTO topico(titulo, conteudo, login) VALUES (?, ?, ?);";
-	private final String listQuery = "SELECT * FROM topico ORDER BY id_topico DESC;";
-	private final String recuperaQuery = "SELECT * FROM topico WHERE id_topico=?;";
+	private final String insertQuery = "INSERT INTO posts(title, content, login) VALUES (?, ?, ?);";
+	private final String listQuery = "SELECT * FROM posts ORDER BY post_id DESC;";
+	private final String recuperaQuery = "SELECT * FROM posts WHERE post_id=?;";
 
 	static {
 		try {
@@ -46,10 +46,10 @@ public class PostManager implements PostDAO {
 			PreparedStatement stm = con.prepareStatement(listQuery);
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
-				String title = rs.getString("titulo");
-				String content = rs.getString("conteudo");
+				String title = rs.getString("title");
+				String content = rs.getString("content");
 				String login = rs.getString("login");
-				int id = rs.getInt("id_topico");
+				int id = rs.getInt("post_id");
 				posts.add(new Post(id, title, content, login));
 			}
 			return posts;
@@ -67,8 +67,8 @@ public class PostManager implements PostDAO {
 			stm.setInt(1, id);
 			ResultSet rs = stm.executeQuery();
 			if (rs.next()) {
-				String title = rs.getString("titulo");
-				String content = rs.getString("conteudo");
+				String title = rs.getString("title");
+				String content = rs.getString("content");
 				String login = rs.getString("login");
 				return new Post(id, title, content, login);
 			}

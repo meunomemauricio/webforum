@@ -6,14 +6,14 @@ public class User {
 	private String _email;
 	private String _name;
 	private String _password;
-	private int _pontos;
+	private int _points;
 
 	public User(String login, String email, String name, String password) {
 		_login = login;
 		_email = email;
 		_name = name;
 		_password = password;
-		_pontos = 0;
+		_points = 0;
 	}
 
 	public User(String login, String email, String name, String password, int points) {
@@ -21,7 +21,7 @@ public class User {
 		_email = email;
 		_name = name;
 		_password = password;
-		_pontos = points;
+		_points = points;
 	}
 
 	public String getPassword() {
@@ -41,7 +41,7 @@ public class User {
 	}
 
 	public int getPoints() {
-		return _pontos;
+		return _points;
 	}
 
 }

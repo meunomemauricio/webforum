@@ -54,13 +54,13 @@ public class TestComments {
 		List<Post> posts = _postMgmt.listPosts();
 		Post post = posts.get(0);
 
-		Comment cmnt = new Comment("Primeiro Comentario", post.getLogin(), post.getId());
+		Comment cmnt = new Comment("First Comment", post.getLogin(), post.getId());
 		_cmntMgmt.addComment(cmnt);
 
 		List<Comment> comments = _cmntMgmt.retrieveComments(post.getId());
 
 		assertEquals(1, comments.size());
-		assertEquals("Primeiro Comentario", comments.get(0).getContent());
+		assertEquals("First Comment", comments.get(0).getContent());
 	}
 
 	@Test
@@ -70,16 +70,16 @@ public class TestComments {
 		Post post1 = posts.get(0);
 		Post post2 = posts.get(1);
 
-		Comment cmnt = new Comment("Primeiro Comentario", post1.getLogin(), post1.getId());
+		Comment cmnt = new Comment("First Comment", post1.getLogin(), post1.getId());
 		_cmntMgmt.addComment(cmnt);
 
-		cmnt = new Comment("Segundo Comentario", post1.getLogin(), post1.getId());
+		cmnt = new Comment("Second Comment", post1.getLogin(), post1.getId());
 		_cmntMgmt.addComment(cmnt);
 
-		cmnt = new Comment("Terceiro Comentario", post1.getLogin(), post1.getId());
+		cmnt = new Comment("Third Comment", post1.getLogin(), post1.getId());
 		_cmntMgmt.addComment(cmnt);
 
-		cmnt = new Comment("Quarto Comentario", post2.getLogin(), post2.getId());
+		cmnt = new Comment("Fourth Comment", post2.getLogin(), post2.getId());
 		_cmntMgmt.addComment(cmnt);
 
 		List<Comment> comments = _cmntMgmt.retrieveComments(post1.getId());
@@ -87,9 +87,9 @@ public class TestComments {
 		// Assert 3 comments are retrieved, since the other are from another post
 		assertEquals(3, comments.size());
 		// Assert comments are sorted with the most recent last
-		assertEquals("Primeiro Comentario", comments.get(0).getContent());
-		assertEquals("Segundo Comentario", comments.get(1).getContent());
-		assertEquals("Terceiro Comentario", comments.get(2).getContent());
+		assertEquals("First Comment", comments.get(0).getContent());
+		assertEquals("Second Comment", comments.get(1).getContent());
+		assertEquals("Third Comment", comments.get(2).getContent());
 	}
 
 	private void setupDatabase(String file) {
@@ -106,21 +106,21 @@ public class TestComments {
 	private void assertDatabase(String file) {
 		try {
 			IDataSet databaseDataSet = _jdt.getConnection().createDataSet();
-			ITable actualTable = databaseDataSet.getTable("usuario");
+			ITable actualTable = databaseDataSet.getTable("users");
 			IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(
 					new File(String.format("test//datasets/%s", file)));
-			ITable expectedTable = expectedDataSet.getTable("usuario");
+			ITable expectedTable = expectedDataSet.getTable("users");
 			Assertion.assertEquals(expectedTable, actualTable);
 
-			actualTable = databaseDataSet.getTable("topico");
-			expectedTable = expectedDataSet.getTable("topico");
-			// Its necessary to exclude the id_topico column since it's always changing
+			actualTable = databaseDataSet.getTable("posts");
+			expectedTable = expectedDataSet.getTable("posts");
+			// Its necessary to exclude the post_id column since it's always changing
 			ITable filteredTable = DefaultColumnFilter.includedColumnsTable(
 					actualTable, expectedTable.getTableMetaData().getColumns());
 			Assertion.assertEquals(expectedTable, filteredTable);
 
-			actualTable = databaseDataSet.getTable("comentario");
-			expectedTable = expectedDataSet.getTable("comentario");
+			actualTable = databaseDataSet.getTable("comments");
+			expectedTable = expectedDataSet.getTable("comments");
 			filteredTable = DefaultColumnFilter.includedColumnsTable(
 					actualTable, expectedTable.getTableMetaData().getColumns());
 			Assertion.assertEquals(expectedTable, filteredTable);

@@ -219,10 +219,10 @@ public class FunctionalTests {
 	private void assertDatabase(String file) {
 		try {
 			IDataSet databaseDataSet = _jdt.getConnection().createDataSet();
-			ITable actualTable = databaseDataSet.getTable("usuario");
+			ITable actualTable = databaseDataSet.getTable("users");
 			IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(
 					new File(String.format("test//datasets/%s", file)));
-			ITable expectedTable = expectedDataSet.getTable("usuario");
+			ITable expectedTable = expectedDataSet.getTable("users");
 			Assertion.assertEquals(expectedTable, actualTable);
 		} catch (Exception e) {
 			throw new RuntimeException("Could not assert tables:" + e);

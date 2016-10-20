@@ -53,7 +53,7 @@ public class TestUsers {
 	public void registerAlreadyExistingUser() {
 		setupDatabase("only_user.xml");
 
-		User u = new User("mauricio", "outro@email.com", "Outro Nome", "s3n#A");
+		User u = new User("mauricio", "another@email.com", "Another Name", "s3n#A");
 
 		try {
 			_userMgmt.insert(u);
@@ -200,10 +200,10 @@ public class TestUsers {
 	private void verificaDatabase(String file) {
 		try {
 			IDataSet databaseDataSet = _jdt.getConnection().createDataSet();
-			ITable actualTable = databaseDataSet.getTable("usuario");
+			ITable actualTable = databaseDataSet.getTable("users");
 			IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(
 					new File(String.format("test//datasets/%s", file)));
-			ITable expectedTable = expectedDataSet.getTable("usuario");
+			ITable expectedTable = expectedDataSet.getTable("users");
 			Assertion.assertEquals(expectedTable, actualTable);
 		} catch (Exception e) {
 			throw new RuntimeException("Não foi possível verificar Tabela:" + e);

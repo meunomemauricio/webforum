@@ -1,50 +1,50 @@
-CREATE TABLE usuario
+CREATE TABLE users
 (
   login text NOT NULL,
   email text,
-  nome text,
-  senha text,
-  pontos integer,
-  CONSTRAINT usuario_pkey PRIMARY KEY (login)
+  name text,
+  password text,
+  points integer,
+  CONSTRAINT user_pkey PRIMARY KEY (login)
 );
 
-CREATE SEQUENCE topico_id_topico_seq
+CREATE SEQUENCE post_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
 
-CREATE TABLE topico
+CREATE TABLE posts
 (
-  id_topico integer NOT NULL DEFAULT nextval('topico_id_topico_seq'::regclass),
-  titulo text,
-  conteudo text,
+  post_id integer NOT NULL DEFAULT nextval('post_id_seq'::regclass),
+  title text,
+  content text,
   login text,
-  CONSTRAINT topico_pkey PRIMARY KEY (id_topico),
-  CONSTRAINT topico_login_fkey FOREIGN KEY (login)
-      REFERENCES usuario (login) MATCH SIMPLE
+  CONSTRAINT post_pkey PRIMARY KEY (post_id),
+  CONSTRAINT post_login_fkey FOREIGN KEY (login)
+      REFERENCES users (login) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-CREATE SEQUENCE comentario_id_comentario_seq
+CREATE SEQUENCE comment_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
 
-CREATE TABLE comentario
+CREATE TABLE comments
 (
-  id_comentario integer NOT NULL DEFAULT nextval('comentario_id_comentario_seq'::regclass),
-  comentario text,
+  comment_id integer NOT NULL DEFAULT nextval('comment_id_seq'::regclass),
+  content text,
   login text,
-  id_topico integer,
-  CONSTRAINT comentario_pkey PRIMARY KEY (id_comentario),
-  CONSTRAINT comentario_id_topico_fkey FOREIGN KEY (id_topico)
-      REFERENCES topico (id_topico) MATCH SIMPLE
+  post_id integer,
+  CONSTRAINT comment_pkey PRIMARY KEY (comment_id),
+  CONSTRAINT comment_post_id_fkey FOREIGN KEY (post_id)
+      REFERENCES posts (post_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT comentario_login_fkey FOREIGN KEY (login)
-      REFERENCES usuario (login) MATCH SIMPLE
+  CONSTRAINT comment_login_fkey FOREIGN KEY (login)
+      REFERENCES users (login) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
