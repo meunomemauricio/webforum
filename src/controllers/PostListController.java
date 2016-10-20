@@ -10,27 +10,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.GerenciaTopico;
-import model.Topico;
-import model.TopicosDAO;
+import model.Post;
+import model.PostDAO;
+import model.PostManager;
 
-@WebServlet("/topicos")
-public class ListaController extends HttpServlet {
+@WebServlet("/posts")
+public class PostListController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Object login = request.getSession().getAttribute("login");
 		if (login == null) {
-			request.setAttribute("msgError", "É necessário estar logado para acessar aquela página.");
+			request.setAttribute("msgError", "It's necessary to be logged in to load that page.");
 			request.getRequestDispatcher("login").forward(request, response);
 			return;
 		}
 
-		TopicosDAO gerTopicos = new GerenciaTopico();
-		List<Topico> topicos = gerTopicos.listarTopicos();
-		request.setAttribute("listTopicos", topicos);
-		request.getRequestDispatcher("TelaTopicos.jsp").forward(request, response);
+		PostDAO postMgmt = new PostManager();
+		List<Post> posts = postMgmt.listPosts();
+		request.setAttribute("postList", posts);
+		request.getRequestDispatcher("PostListView.jsp").forward(request, response);
 	}
 
 	@Override

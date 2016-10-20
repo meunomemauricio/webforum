@@ -13,8 +13,8 @@ import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.util.fileloader.DataFileLoader;
 import org.dbunit.util.fileloader.FlatXmlDataFileLoader;
-import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -40,18 +40,19 @@ public class FunctionalTests {
 		_driver = new FirefoxDriver();
 		_driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
-		_wait = new WebDriverWait(_driver, 15);
+		_wait = new WebDriverWait(_driver, 5);
 
 		_jdt = new JdbcDatabaseTester(
 				"org.postgresql.Driver",
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin");
+
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		// Assegura que usuário não fica logado para o próximo teste
-		vaiParaPagina("logout");
+	@Before
+	public void setUp() throws Exception {
+		// Make sure user is not logged from the test before
+		goToPage("logout");
 	}
 
 	@AfterClass
@@ -64,143 +65,143 @@ public class FunctionalTests {
 	}
 
 	@Test
-	public void registraNovoUsuario() throws Exception {
-		setupDatabase("vazio.xml");
+	public void registerNewUser() throws Exception {
+		setupDatabase("empty_db.xml");
 
-		vaiParaPagina("cadastro");
-		preencheFormularioCadastro("mauricio", "s3n#A", "Mauricio Freitas", "mauricio@mail.com");
-		aguardaPorTitulo("Login - Web Forum");
+		goToPage("register");
+		fillRegisterForm("mauricio", "s3n#A", "Mauricio Freitas", "mauricio@mail.com");
+		waitForTitle("Login - Web Forum");
 
-		verificaDatabase("unico_usuario.xml");
+		assertDatabase("only_user.xml");
 	}
 
 	@Test
-	public void registraUsuarioExistente() throws Exception {
-		setupDatabase("unico_usuario.xml");
+	public void registerExistingUser() throws Exception {
+		setupDatabase("only_user.xml");
 
-		vaiParaPagina("cadastro");
-		preencheFormularioCadastro("mauricio", "s3n#A", "Mauricio Freitas", "mauricio@mail.com");
-		aguardaPorMsgErro();
+		goToPage("register");
+		fillRegisterForm("mauricio", "s3n#A", "Mauricio Freitas", "mauricio@mail.com");
+		waitUntilErrorMessage();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("Este login já está cadastrado.", error_msg);
+	    assertEquals("Login already registered", error_msg);
 
-		verificaDatabase("unico_usuario.xml");
+		assertDatabase("only_user.xml");
 	}
 
 	@Test
-	public void loginBemSucedido() throws Exception {
-		setupDatabase("unico_usuario.xml");
+	public void sucessfulLogin() throws Exception {
+		setupDatabase("only_user.xml");
 
-		fazLogin("mauricio", "s3n#A");
+		doLogin("mauricio", "s3n#A");
 
-		aguardaPorTitulo("Tópicos - Web Forum");
+		waitForTitle("Posts - Web Forum");
 	}
 
 	@Test
-	public void loginUsuarioNaoRegistrado() throws Exception {
-		setupDatabase("unico_usuario.xml");
+	public void unregisteredUserLogin() throws Exception {
+		setupDatabase("only_user.xml");
 
-		fazLogin("inexistente", "senhaqualquer");
-		aguardaPorMsgErro();
+		doLogin("inexistente", "anypw");
+		waitUntilErrorMessage();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("Não foi possível autenticar o usuário", error_msg);
+	    assertEquals("Could not authenticate user", error_msg);
 	}
 
 	@Test
-	public void loginSenhaErrada() throws Exception {
-		setupDatabase("unico_usuario.xml");
+	public void wrongPasswordLogin() throws Exception {
+		setupDatabase("only_user.xml");
 
-		fazLogin("mauricio", "senhaerrada");
-		aguardaPorMsgErro();
+		doLogin("mauricio", "wrongpw");
+		waitUntilErrorMessage();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("Não foi possível autenticar o usuário", error_msg);
+	    assertEquals("Could not authenticate user", error_msg);
 	}
 
 	@Test
-	public void acessaTopicosSemLogar() throws Exception {
-		vaiParaPagina("topicos");
-		aguardaPorMsgErro();
+	public void postsPageWithoutLogin() throws Exception {
+		goToPage("posts");
+		waitUntilErrorMessage();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("É necessário estar logado para acessar aquela página.", error_msg);
+	    assertEquals("It's necessary to be logged in to load that page.", error_msg);
 	}
 
 	@Test
-	public void criaNovoTopico() throws Exception {
-		setupDatabase("unico_usuario.xml");
+	public void createNewPost() throws Exception {
+		setupDatabase("only_user.xml");
 
-		fazLogin("mauricio", "s3n#A");
-		aguardaPorTitulo("Tópicos - Web Forum");
+		doLogin("mauricio", "s3n#A");
+		waitForTitle("Posts - Web Forum");
 
-		_driver.findElement(By.linkText("+ Novo Tópico")).click();
-		aguardaPorTitulo("Novo Tópico - Web Forum");
+		_driver.findElement(By.linkText("+ New Post")).click();
+		waitForTitle("New Post - Web Forum");
 
-		preencheFormularioTopico("Primeiro Topico", "Conteudo Primeiro Topico");
-		aguardaPorTitulo("Tópicos - Web Forum");
+		fillPostForm("First Post", "First Post Content");
+		waitForTitle("Posts - Web Forum");
 
-		String titulo = _driver.findElement(By.cssSelector("p.list-item-title")).getText();
-		assertEquals("Primeiro Topico", titulo);
+		String title = _driver.findElement(By.cssSelector("p.list-item-title")).getText();
+		assertEquals("First Post", title);
 	}
 
 	@Test
-	public void criaNovoComentario() throws Exception {
-		setupDatabase("unico_topico.xml");
+	public void createNewComment() throws Exception {
+		setupDatabase("only_post.xml");
 
-		fazLogin("mauricio", "s3n#A");
-		aguardaPorTitulo("Tópicos - Web Forum");
+		doLogin("mauricio", "s3n#A");
+		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.cssSelector("p.list-item-title")).click();
-		aguardaPorTitulo("Primeiro Topico - Web Forum");
+		waitForTitle("First Post - Web Forum");
 
-	    preencheComentario("Primeiro Comentario");
+	    fillCommentForm("First Comment");
 	    _wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.topic-cmt")));
 
-	    String comentario = _driver.findElement(By.cssSelector("p.topic-cmt-text")).getText();
-		assertEquals("Primeiro Comentario", comentario);
+	    String comment = _driver.findElement(By.cssSelector("p.topic-cmt-text")).getText();
+		assertEquals("First Comment", comment);
 	}
 
-	private void vaiParaPagina(String pagina) {
-		_driver.get(baseUrl + pagina);
+	private void goToPage(String page) {
+		_driver.get(baseUrl + page);
 	}
 
-	private void fazLogin(String login, String senha) {
-		vaiParaPagina("login");
+	private void doLogin(String login, String password) {
+		goToPage("login");
 		_driver.findElement(By.name("login")).sendKeys(login);
-		_driver.findElement(By.name("senha")).sendKeys(senha);
+		_driver.findElement(By.name("password")).sendKeys(password);
 		_driver.findElement(By.cssSelector("button")).click();
 	}
 
-	private void aguardaPorTitulo(String titulo) {
-		_wait.until(ExpectedConditions.titleIs(titulo));
+	private void waitForTitle(String title) {
+		_wait.until(ExpectedConditions.titleIs(title));
 	}
 
-	private void aguardaPorMsgErro() {
+	private void waitUntilErrorMessage() {
 		_wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("p.error")));
 	}
 
-	private void preencheFormularioCadastro(String login, String senha, String nome, String email) {
+	private void fillRegisterForm(String login, String password, String name, String email) {
 		_driver.findElement(By.name("login")).sendKeys(login);
-		_driver.findElement(By.name("senha")).sendKeys(senha);
-		_driver.findElement(By.name("nome")).sendKeys(nome);
+		_driver.findElement(By.name("password")).sendKeys(password);
+		_driver.findElement(By.name("name")).sendKeys(name);
 		_driver.findElement(By.name("email")).sendKeys(email);
 		_driver.findElement(By.cssSelector("button")).click();
 	}
 
-	private void preencheFormularioTopico(String titulo, String conteudo) {
-		_driver.findElement(By.name("titulo")).clear();
-		_driver.findElement(By.name("conteudo")).clear();
-		_driver.findElement(By.name("titulo")).sendKeys(titulo);
-		_driver.findElement(By.name("conteudo")).sendKeys(conteudo);
+	private void fillPostForm(String title, String content) {
+		_driver.findElement(By.name("title")).clear();
+		_driver.findElement(By.name("content")).clear();
+		_driver.findElement(By.name("title")).sendKeys(title);
+		_driver.findElement(By.name("content")).sendKeys(content);
 		_driver.findElement(By.cssSelector("button")).click();
 	}
 
 
-	private void preencheComentario(String comentario) {
-		_driver.findElement(By.name("comentario")).clear();
-	    _driver.findElement(By.name("comentario")).sendKeys(comentario);
+	private void fillCommentForm(String comment) {
+		_driver.findElement(By.name("comment")).clear();
+	    _driver.findElement(By.name("comment")).sendKeys(comment);
 	    _driver.findElement(By.cssSelector("button")).click();
 	}
 
@@ -211,11 +212,11 @@ public class FunctionalTests {
 		try {
 			_jdt.onSetup();
 		} catch (Exception e) {
-			throw new RuntimeException("Não foi possível carregar o arquivo XML: " + e);
+			throw new RuntimeException("Could not load XML file: " + e);
 		}
 	}
 
-	private void verificaDatabase(String file) {
+	private void assertDatabase(String file) {
 		try {
 			IDataSet databaseDataSet = _jdt.getConnection().createDataSet();
 			ITable actualTable = databaseDataSet.getTable("usuario");
@@ -224,7 +225,7 @@ public class FunctionalTests {
 			ITable expectedTable = expectedDataSet.getTable("usuario");
 			Assertion.assertEquals(expectedTable, actualTable);
 		} catch (Exception e) {
-			throw new RuntimeException("Não foi possível verificar Tabela:" + e);
+			throw new RuntimeException("Could not assert tables:" + e);
 		}
 	}
 

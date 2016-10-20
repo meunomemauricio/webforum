@@ -9,31 +9,31 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.GerenciaUsuario;
-import model.RegistroError;
-import model.Usuario;
-import model.UsuarioDAO;
+import model.RegistrationError;
+import model.User;
+import model.UserDAO;
+import model.UserManager;
 
-@WebServlet("/cadastro")
-public class CadastroController extends HttpServlet {
+@WebServlet("/register")
+public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("TelaCadastro.jsp").forward(request, response);
+		request.getRequestDispatcher("RegisterView.jsp").forward(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("login");
-		String nome = request.getParameter("nome");
+		String name = request.getParameter("name");
 		String email = request.getParameter("email");
-		String senha = request.getParameter("senha");
+		String password = request.getParameter("password");
 
-		UsuarioDAO usuarios = new GerenciaUsuario();
+		UserDAO users = new UserManager();
 		try {
-			usuarios.inserir(new Usuario(login, email, nome, senha));
-		} catch (RegistroError e) {
+			users.insert(new User(login, email, name, password));
+		} catch (RegistrationError e) {
 			request.setAttribute("msgError", e.getMessage());
 			doGet(request, response);
 			return;

@@ -3,21 +3,21 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Novo Tópico - Web Forum</title>
+	<title>New Post - Web Forum</title>
 	<link rel="stylesheet" type="text/css" href="style/forum.css">
 </head>
 <body>
 	<div class="insert-form">
-		<form action="insere" method="post">
-			<p class="form-title">Digite abaixo o conteúdo do novo tópico:</p>
-			<input type="text" placeholder="título" name="titulo"/>
-			<textarea placeholder="conteúdo" name="conteudo"></textarea>
-			<button>novo tópico</button>
+		<form action="insert" method="post">
+			<p class="form-title">Write the content of the new post:</p>
+			<input type="text" placeholder="title" name="title"/>
+			<textarea placeholder="post content" name="content"></textarea>
+			<button>submit</button>
 			<% if (request.getAttribute("msgError") != null) { %>
 				<p class="error">${msgError}</p>
 			<% } %>
 		</form>
-		<p class="insert-link"><a class="insert-link" href="topicos">« Voltar para a lista de tópicos</a></p>
+		<p class="insert-link"><a class="insert-link" href="posts">« Return</a></p>
 	</div>
 </body>
 </html>

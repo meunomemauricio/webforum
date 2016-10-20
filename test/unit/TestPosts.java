@@ -17,15 +17,15 @@ import org.dbunit.util.fileloader.FlatXmlDataFileLoader;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.GerenciaTopico;
-import model.Topico;
-import model.TopicoInexistente;
-import model.TopicosDAO;
+import model.InvalidPost;
+import model.Post;
+import model.PostDAO;
+import model.PostManager;
 
-public class TestaTopicos {
+public class TestPosts {
 
 	private JdbcDatabaseTester _jdt;
-	private TopicosDAO _gerTopico = new GerenciaTopico();
+	private PostDAO _postMgmt = new PostManager();
 
 	@Before
 	public void setUp() throws Exception {
@@ -36,59 +36,59 @@ public class TestaTopicos {
 	}
 
 	@Test
-	public void insereNovoTopico() throws Exception {
-		setupDatabase("unico_usuario.xml");
+	public void insertNewPost() throws Exception {
+		setupDatabase("only_user.xml");
 
-		Topico topico = new Topico("Primeiro Topico", "Conteudo Primeiro Topico", "mauricio");
-		_gerTopico.insere(topico);
+		Post post = new Post("First Post", "First Post Content", "mauricio");
+		_postMgmt.insert(post);
 
-		verificaDatabase("unico_topico.xml");
+		assertDatabase("only_post.xml");
 	}
 
 	@Test
-	public void recuperaListaComUmTopico() throws Exception {
-		setupDatabase("unico_topico.xml");
+	public void retrievePostList() throws Exception {
+		setupDatabase("only_post.xml");
 
-		List<Topico> topicos = _gerTopico.listarTopicos();
+		List<Post> posts = _postMgmt.listPosts();
 
-		assertEquals(1, topicos.size());
-		assertEquals(topicos.get(0).getTitulo(), "Primeiro Topico");
+		assertEquals(1, posts.size());
+		assertEquals(posts.get(0).getTitle(), "First Post");
 	}
 
 	@Test
-	public void recuperaListaMultiplosTopicos() throws Exception {
-		setupDatabase("multiplos_topicos.xml");
+	public void retrieveListWithMultiplePosts() throws Exception {
+		setupDatabase("multiple_posts.xml");
 
-		List<Topico> topicos = _gerTopico.listarTopicos();
+		List<Post> posts = _postMgmt.listPosts();
 
-		assertEquals(5, topicos.size());
-		// Garante que a lista é ordenada sendo o topico mais recente primeiro
-		assertEquals(topicos.get(0).getTitulo(), "Quinto Topico");
-		assertEquals(topicos.get(2).getTitulo(), "Terceiro Topico");
-		assertEquals(topicos.get(4).getTitulo(), "Primeiro Topico");
+		assertEquals(5, posts.size());
+		// Assert list is sorted with the most recent post first
+		assertEquals(posts.get(0).getTitle(), "Fifth Post");
+		assertEquals(posts.get(2).getTitle(), "Third Post");
+		assertEquals(posts.get(4).getTitle(), "First Post");
 	}
 
 	@Test
-	public void recuperaTopicoPorIDValida() throws Exception {
-		setupDatabase("unico_topico.xml");
+	public void retrievePostWithInvalidID() throws Exception {
+		setupDatabase("only_post.xml");
 
-		List<Topico> topicos = _gerTopico.listarTopicos();
-		Topico topicoLista = topicos.get(0);
-		int id = topicoLista.getId();
+		List<Post> posts = _postMgmt.listPosts();
+		Post post = posts.get(0);
+		int id = post.getId();
 
-		Topico topicoRecuperado = _gerTopico.recuperar(id);
+		Post retrievedPost = _postMgmt.retrieve(id);
 
-		assertEquals(topicoLista, topicoRecuperado);
+		assertEquals(post, retrievedPost);
 	}
 
 	@Test
-	public void recuperarTopicoInexistente() throws Exception {
-		setupDatabase("unico_usuario.xml");
+	public void retreiveInexistingPost() throws Exception {
+		setupDatabase("only_user.xml");
 
 		try {
-			_gerTopico.recuperar(0);
-			fail("Nenhum tópico deveria ter sido recuperado");
-		} catch (TopicoInexistente e) {};
+			_postMgmt.retrieve(0);
+			fail("No post should be recovered.");
+		} catch (InvalidPost e) {};
 	}
 
 	private void setupDatabase(String file) {
@@ -98,11 +98,11 @@ public class TestaTopicos {
 		try {
 			_jdt.onSetup();
 		} catch (Exception e) {
-			throw new RuntimeException("Não foi possível carregar o arquivo XML: " + e);
+			throw new RuntimeException("Could not load XML file: " + e);
 		}
 	}
 
-	private void verificaDatabase(String file) {
+	private void assertDatabase(String file) {
 		try {
 			IDataSet databaseDataSet = _jdt.getConnection().createDataSet();
 			ITable actualTable = databaseDataSet.getTable("usuario");
@@ -114,7 +114,7 @@ public class TestaTopicos {
 
 			actualTable = databaseDataSet.getTable("topico");
 			expectedTable = expectedDataSet.getTable("topico");
-			// É necessário excluir a coluna id_topico porque ela sempre varia
+			// It's necessary to exclude the id_topico column from verification
 			ITable filteredTable = DefaultColumnFilter.includedColumnsTable(
 					actualTable, expectedTable.getTableMetaData().getColumns());
 			Assertion.assertEquals(expectedTable, filteredTable);

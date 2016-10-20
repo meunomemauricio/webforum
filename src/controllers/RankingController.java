@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.GerenciaUsuario;
-import model.UsuarioDAO;
+import model.UserDAO;
+import model.UserManager;
 
 @WebServlet("/ranking")
 public class RankingController extends HttpServlet {
@@ -20,15 +20,15 @@ public class RankingController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Object login = request.getSession().getAttribute("login");
 		if (login == null) {
-			request.setAttribute("msgError", "É necessário estar logado para acessar aquela página.");
+			request.setAttribute("msgError", "It's necessary to be logged in to load that page.");
 			request.getRequestDispatcher("login").forward(request, response);
 			return;
 		}
 
-		UsuarioDAO usuarios = new GerenciaUsuario();
-		request.setAttribute("ranking", usuarios.ranking());
+		UserDAO users = new UserManager();
+		request.setAttribute("ranking", users.rankUsers());
 
-		request.getRequestDispatcher("TelaRanking.jsp").forward(request, response);
+		request.getRequestDispatcher("RankingView.jsp").forward(request, response);
 	}
 
 }

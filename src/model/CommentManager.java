@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GerenciaComentario implements ComentariosDAO {
+public class CommentManager implements CommentsDAO {
 
-	private final String insereQuery = "INSERT INTO comentario(comentario, login, id_topico) VALUES (?, ?, ?);";
-	private final String recuperaQuery = "SELECT * FROM comentario WHERE id_topico=? ORDER BY id_comentario ASC;";
+	private final String insertQuery = "INSERT INTO comentario(comentario, login, id_topico) VALUES (?, ?, ?);";
+	private final String recoverQuery = "SELECT * FROM comentario WHERE id_topico=? ORDER BY id_comentario ASC;";
 
 	static {
 		try {
@@ -22,14 +22,14 @@ public class GerenciaComentario implements ComentariosDAO {
 	}
 
 	@Override
-	public void adicionaComentario(Comentario cmnt) {
+	public void addComment(Comment cmnt) {
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
-			PreparedStatement stm = con.prepareStatement(insereQuery);
-			stm.setString(1, cmnt.getComentario());
+			PreparedStatement stm = con.prepareStatement(insertQuery);
+			stm.setString(1, cmnt.getContent());
 			stm.setString(2, cmnt.getLogin());
-			stm.setInt(3, cmnt.getTopicoId());
+			stm.setInt(3, cmnt.getPostId());
 			stm.executeUpdate();
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
@@ -37,21 +37,21 @@ public class GerenciaComentario implements ComentariosDAO {
 	}
 
 	@Override
-	public List<Comentario> recuperarComentarios(int topicoId) {
-		List<Comentario> comentarios = new ArrayList<>();
+	public List<Comment> retrieveComments(int postId) {
+		List<Comment> comments = new ArrayList<>();
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
-			PreparedStatement stm = con.prepareStatement(recuperaQuery);
-			stm.setInt(1, topicoId);
+			PreparedStatement stm = con.prepareStatement(recoverQuery);
+			stm.setInt(1, postId);
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
 				String comentario = rs.getString("comentario");
 				String login = rs.getString("login");
 				int id = rs.getInt("id_topico");
-				comentarios.add(new Comentario(id, comentario, login, topicoId));
+				comments.add(new Comment(id, comentario, login, postId));
 			}
-			return comentarios;
+			return comments;
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}

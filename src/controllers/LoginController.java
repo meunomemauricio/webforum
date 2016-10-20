@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.GerenciaUsuario;
-import model.UsuarioDAO;
+import model.UserDAO;
+import model.UserManager;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
@@ -19,22 +19,22 @@ public class LoginController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("TelaLogin.jsp").forward(request, response);
+		request.getRequestDispatcher("LoginView.jsp").forward(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("login");
-		String senha = request.getParameter("senha");
-		UsuarioDAO usuarios = new GerenciaUsuario();
+		String password = request.getParameter("password");
+		UserDAO users = new UserManager();
 		HttpSession session = request.getSession();
-		if (usuarios.autenticar(login, senha)) {
+		if (users.authenticate(login, password)) {
 			session.setAttribute("login", login);
-			response.sendRedirect("topicos");
+			response.sendRedirect("posts");
 		}
 		else {
 			session.removeAttribute("login");
-			request.setAttribute("msgError", "Não foi possível autenticar o usuário");
+			request.setAttribute("msgError", "Could not authenticate user");
 			doGet(request, response);
 		}
 	}

@@ -9,15 +9,15 @@
 <body>
 	<div class="login-page">
 		<div class="form">
-			<p class="form-title">Entre com suas credenciais:</p>
+			<p class="form-title">Login with your credentials:</p>
 			<form class="login-form" action="login" method="post">
 				<input type="text" placeholder="login" name="login"/>
-				<input type="password" placeholder="senha" name="senha"/>
+				<input type="password" placeholder="password" name="password"/>
 				<button>login</button>
 				<% if (request.getAttribute("msgError") != null) { %>
 					<p class="error">${msgError}</p>
 				<% } %>
-				<p class="message">Não se registrou? <a href="cadastro">Criar uma conta.</a></p>
+				<p class="message">Not registered? <a href="register">Create an account.</a></p>
 			</form>
 		</div>
 	</div>

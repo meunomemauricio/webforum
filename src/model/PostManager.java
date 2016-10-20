@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GerenciaTopico implements TopicosDAO {
+public class PostManager implements PostDAO {
 
-	private final String insereQuery = "INSERT INTO topico(titulo, conteudo, login) VALUES (?, ?, ?);";
-	private final String listaQuery = "SELECT * FROM topico ORDER BY id_topico DESC;";
+	private final String insertQuery = "INSERT INTO topico(titulo, conteudo, login) VALUES (?, ?, ?);";
+	private final String listQuery = "SELECT * FROM topico ORDER BY id_topico DESC;";
 	private final String recuperaQuery = "SELECT * FROM topico WHERE id_topico=?;";
 
 	static {
@@ -23,14 +23,14 @@ public class GerenciaTopico implements TopicosDAO {
 	}
 
 	@Override
-	public void insere(Topico topico) {
+	public void insert(Post post) {
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
-			PreparedStatement stm = con.prepareStatement(insereQuery);
-			stm.setString(1, topico.getTitulo());
-			stm.setString(2, topico.getConteudo());
-			stm.setString(3, topico.getLogin());
+			PreparedStatement stm = con.prepareStatement(insertQuery);
+			stm.setString(1, post.getTitle());
+			stm.setString(2, post.getContent());
+			stm.setString(3, post.getLogin());
 			stm.executeUpdate();
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
@@ -38,28 +38,28 @@ public class GerenciaTopico implements TopicosDAO {
 	}
 
 	@Override
-	public List<Topico> listarTopicos() {
-		List<Topico> topicos = new ArrayList<>();
+	public List<Post> listPosts() {
+		List<Post> posts = new ArrayList<>();
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
-			PreparedStatement stm = con.prepareStatement(listaQuery);
+			PreparedStatement stm = con.prepareStatement(listQuery);
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
-				String titulo = rs.getString("titulo");
-				String conteudo = rs.getString("conteudo");
+				String title = rs.getString("titulo");
+				String content = rs.getString("conteudo");
 				String login = rs.getString("login");
 				int id = rs.getInt("id_topico");
-				topicos.add(new Topico(id, titulo, conteudo, login));
+				posts.add(new Post(id, title, content, login));
 			}
-			return topicos;
+			return posts;
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
 	@Override
-	public Topico recuperar(int id) throws TopicoInexistente {
+	public Post retrieve(int id) throws InvalidPost {
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
@@ -67,12 +67,12 @@ public class GerenciaTopico implements TopicosDAO {
 			stm.setInt(1, id);
 			ResultSet rs = stm.executeQuery();
 			if (rs.next()) {
-				String titulo = rs.getString("titulo");
-				String conteudo = rs.getString("conteudo");
+				String title = rs.getString("titulo");
+				String content = rs.getString("conteudo");
 				String login = rs.getString("login");
-				return new Topico(id, titulo, conteudo, login);
+				return new Post(id, title, content, login);
 			}
-			throw new TopicoInexistente("Não foi possível encontrar este tópico.");
+			throw new InvalidPost("Could not find this post.");
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}

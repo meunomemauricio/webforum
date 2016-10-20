@@ -2,4 +2,6 @@
 	<usuario login="joao" email="joao@mail.com" nome="Joao" senha="joao123" pontos="15" />
 	<usuario login="jose" email="jose@mail.com" nome="Jose" senha="jose123" pontos="5" />
 	<usuario login="maria" email="maria@mail.com" nome="Maria" senha="maria123" pontos="10" />
+	<topico />
+	<comentario />
 </dataset>

@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GerenciaUsuario implements UsuarioDAO {
+public class UserManager implements UserDAO {
 
-	private final String insereQuery = "INSERT INTO usuario(login, email, nome, senha, pontos) VALUES (?, ?, ?, ?, ?);";
-	private final String recuperaQuery = "SELECT * FROM usuario WHERE login = ?;";
-	private final String adicionaQuery = "UPDATE usuario SET pontos = pontos + ? WHERE login = ?;";
+	private final String insertQuery = "INSERT INTO usuario(login, email, nome, senha, pontos) VALUES (?, ?, ?, ?, ?);";
+	private final String retrieveQuery = "SELECT * FROM usuario WHERE login = ?;";
+	private final String addPointQuery = "UPDATE usuario SET pontos = pontos + ? WHERE login = ?;";
 	private final String rankingQuery = "SELECT * FROM usuario ORDER BY pontos DESC;";
 
 	static {
@@ -24,19 +24,19 @@ public class GerenciaUsuario implements UsuarioDAO {
 	}
 
 	@Override
-	public void inserir(Usuario u) throws RegistroError {
-		if (recuperar(u.getLogin()) != null)
-			throw new RegistroError("Este login já está cadastrado.");
+	public void insert(User u) throws RegistrationError {
+		if (retrieve(u.getLogin()) != null)
+			throw new RegistrationError("Login already registered");
 
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
-			PreparedStatement stm = con.prepareStatement(insereQuery);
+			PreparedStatement stm = con.prepareStatement(insertQuery);
 			stm.setString(1, u.getLogin());
 			stm.setString(2, u.getEmail());
-			stm.setString(3, u.getNome());
-			stm.setString(4, u.getSenha());
-			stm.setInt(5, u.getPontos());
+			stm.setString(3, u.getName());
+			stm.setString(4, u.getPassword());
+			stm.setInt(5, u.getPoints());
 			stm.executeUpdate();
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
@@ -44,11 +44,11 @@ public class GerenciaUsuario implements UsuarioDAO {
 	}
 
 	@Override
-	public Usuario recuperar(String login) {
+	public User retrieve(String login) {
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
-			PreparedStatement stm = con.prepareStatement(recuperaQuery);
+			PreparedStatement stm = con.prepareStatement(retrieveQuery);
 			stm.setString(1, login);
 			ResultSet rs = stm.executeQuery();
 			if (!rs.next()) {
@@ -61,30 +61,30 @@ public class GerenciaUsuario implements UsuarioDAO {
 	}
 
 	@Override
-	public boolean autenticar(String login, String senha) {
-		Usuario u = recuperar(login);
+	public boolean authenticate(String login, String password) {
+		User u = retrieve(login);
 		if (u == null) {
 			return false;
 		}
-		if (u.getSenha().equals(senha)) {
+		if (u.getPassword().equals(password)) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public void adicionarPontos(String login, int pontos) throws UsuarioInexistenteError {
-		Usuario u = recuperar(login);
+	public void addPoints(String login, int points) throws InvalidUserError {
+		User u = retrieve(login);
 		if (u == null) {
-			throw new UsuarioInexistenteError("Usuario não existe");
+			throw new InvalidUserError("Unregistered User");
 		}
 
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
 
-			PreparedStatement stm = con.prepareStatement(adicionaQuery);
-			stm.setInt(1, pontos);
+			PreparedStatement stm = con.prepareStatement(addPointQuery);
+			stm.setInt(1, points);
 			stm.setString(2, login);
 			stm.executeUpdate();
 		} catch (SQLException ex) {
@@ -94,8 +94,8 @@ public class GerenciaUsuario implements UsuarioDAO {
 	}
 
 	@Override
-	public List<Usuario> ranking() {
-		List<Usuario> ranking = new ArrayList<>();
+	public List<User> rankUsers() {
+		List<User> ranking = new ArrayList<>();
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
@@ -110,14 +110,14 @@ public class GerenciaUsuario implements UsuarioDAO {
 		}
 	}
 
-	private Usuario resultSet2Usuario(ResultSet rs) throws SQLException {
+	private User resultSet2Usuario(ResultSet rs) throws SQLException {
 		String login = rs.getString("login");
 		String email = rs.getString("email");
-		String nome = rs.getString("nome");
-		String senha = rs.getString("senha");
-		int pontos = rs.getInt("pontos");
+		String name = rs.getString("nome");
+		String password = rs.getString("senha");
+		int points = rs.getInt("pontos");
 
-		return new Usuario(login, email, nome, senha, pontos);
+		return new User(login, email, name, password, points);
 	}
 
 }

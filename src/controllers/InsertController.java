@@ -9,15 +9,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.GerenciaTopico;
-import model.GerenciaUsuario;
-import model.Topico;
-import model.TopicosDAO;
-import model.UsuarioDAO;
-import model.UsuarioInexistenteError;
+import model.InvalidUserError;
+import model.Post;
+import model.PostDAO;
+import model.PostManager;
+import model.UserDAO;
+import model.UserManager;
 
-@WebServlet("/insere")
-public class InsereController extends HttpServlet {
+@WebServlet("/insert")
+public class InsertController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final int PONTOS_POR_TOPICO = 10;
@@ -26,38 +26,38 @@ public class InsereController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Object login = request.getSession().getAttribute("login");
 		if (login == null) {
-			request.setAttribute("msgError", "É necessário estar logado para acessar aquela página.");
+			request.setAttribute("msgError", "It's necessary to be logged in to load that page.");
 			request.getRequestDispatcher("login").forward(request, response);
 			return;
 		}
 
-		request.getRequestDispatcher("TelaInsereTopico.jsp").forward(request, response);
+		request.getRequestDispatcher("InsertPostView.jsp").forward(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Object login = request.getSession().getAttribute("login");
 		if (login == null) {
-			request.setAttribute("msgError", "É necessário estar logado para acessar aquela página.");
+			request.setAttribute("msgError", "It's necessary to be logged in to load that page.");
 			request.getRequestDispatcher("login").forward(request, response);
 			return;
 		}
 
-		String titulo = request.getParameter("titulo");
-		String conteudo = request.getParameter("conteudo");
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
 
-		TopicosDAO gerTopicos = new GerenciaTopico();
-		gerTopicos.insere(new Topico(titulo, conteudo, (String) login));
+		PostDAO postMgmt = new PostManager();
+		postMgmt.insert(new Post(title, content, (String) login));
 
-		UsuarioDAO gerUser = new GerenciaUsuario();
+		UserDAO userMgmt = new UserManager();
 		try {
-			gerUser.adicionarPontos((String) login, PONTOS_POR_TOPICO);
-		} catch (UsuarioInexistenteError e) {
+			userMgmt.addPoints((String) login, PONTOS_POR_TOPICO);
+		} catch (InvalidUserError e) {
 			response.sendRedirect("logout");
 			return;
 		}
 
-		response.sendRedirect("topicos");
+		response.sendRedirect("posts");
 	}
 
 }
