@@ -18,11 +18,11 @@ import org.dbunit.util.fileloader.FlatXmlDataFileLoader;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.InvalidUserError;
-import model.RegistrationError;
-import model.User;
-import model.UserDAO;
-import model.UserManager;
+import model.users.InvalidUserError;
+import model.users.RegistrationError;
+import model.users.User;
+import model.users.UserDAO;
+import model.users.UserManager;
 
 public class TestUsers {
 

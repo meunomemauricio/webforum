@@ -1,4 +1,4 @@
-package model;
+package model.users;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

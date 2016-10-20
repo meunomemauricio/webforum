@@ -1,4 +1,4 @@
-package model;
+package model.users;
 
 public class InvalidUserError extends Exception {
 

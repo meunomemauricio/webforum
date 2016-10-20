@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.UserDAO;
-import model.UserManager;
+import model.users.UserDAO;
+import model.users.UserManager;
 
 @WebServlet("/ranking")
 public class RankingController extends HttpServlet {

@@ -15,12 +15,12 @@ import org.dbunit.util.fileloader.FlatXmlDataFileLoader;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.Comment;
-import model.CommentManager;
-import model.CommentsDAO;
-import model.Post;
-import model.PostDAO;
-import model.PostManager;
+import model.comments.Comment;
+import model.comments.CommentManager;
+import model.comments.CommentsDAO;
+import model.posts.Post;
+import model.posts.PostDAO;
+import model.posts.PostManager;
 
 public class TestComments {
 

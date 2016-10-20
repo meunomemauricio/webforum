@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.InvalidUserError;
-import model.Post;
-import model.PostDAO;
-import model.PostManager;
-import model.UserDAO;
-import model.UserManager;
+import model.posts.Post;
+import model.posts.PostDAO;
+import model.posts.PostManager;
+import model.users.InvalidUserError;
+import model.users.UserDAO;
+import model.users.UserManager;
 
 @WebServlet("/insert")
 public class InsertController extends HttpServlet {

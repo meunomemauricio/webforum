@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.Post;
-import model.PostDAO;
-import model.PostManager;
+import model.posts.Post;
+import model.posts.PostDAO;
+import model.posts.PostManager;
 
 @WebServlet("/posts")
 public class PostListController extends HttpServlet {

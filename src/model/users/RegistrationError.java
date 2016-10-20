@@ -1,4 +1,4 @@
-package model;
+package model.users;
 
 public class RegistrationError extends Exception {
 	private static final long serialVersionUID = 1L;

@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.RegistrationError;
-import model.User;
-import model.UserDAO;
-import model.UserManager;
+import model.users.RegistrationError;
+import model.users.User;
+import model.users.UserDAO;
+import model.users.UserManager;
 
 @WebServlet("/register")
 public class RegisterController extends HttpServlet {

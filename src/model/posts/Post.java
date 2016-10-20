@@ -1,4 +1,4 @@
-package model;
+package model.posts;
 
 public class Post {
 

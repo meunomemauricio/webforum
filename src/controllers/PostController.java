@@ -10,15 +10,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.Comment;
-import model.CommentManager;
-import model.CommentsDAO;
-import model.InvalidPost;
-import model.InvalidUserError;
-import model.PostDAO;
-import model.PostManager;
-import model.UserDAO;
-import model.UserManager;
+import model.comments.Comment;
+import model.comments.CommentManager;
+import model.comments.CommentsDAO;
+import model.posts.InvalidPost;
+import model.posts.PostDAO;
+import model.posts.PostManager;
+import model.users.InvalidUserError;
+import model.users.UserDAO;
+import model.users.UserManager;
 
 @WebServlet("/post")
 public class PostController extends HttpServlet {

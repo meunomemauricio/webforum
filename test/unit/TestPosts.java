@@ -17,10 +17,10 @@ import org.dbunit.util.fileloader.FlatXmlDataFileLoader;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.InvalidPost;
-import model.Post;
-import model.PostDAO;
-import model.PostManager;
+import model.posts.InvalidPost;
+import model.posts.Post;
+import model.posts.PostDAO;
+import model.posts.PostManager;
 
 public class TestPosts {
 

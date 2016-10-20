@@ -1,4 +1,4 @@
-package model;
+package model.comments;
 
 import java.util.List;
 
