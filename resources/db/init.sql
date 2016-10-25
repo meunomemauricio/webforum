@@ -6,7 +6,8 @@ GRANT ALL ON SCHEMA public TO public;
 CREATE TABLE users
 (
   login text NOT NULL,
-  password text NOT NULL,
+  pwhash text NOT NULL,
+  salt text NOT NULL,
   email text,
   name text,
   points integer,

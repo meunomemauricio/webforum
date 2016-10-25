@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.posts.Post;
 import model.posts.PostDAO;
 import model.posts.PostManager;
-import model.users.InvalidUserError;
+import model.users.AuthenticationError;
 import model.users.UserDAO;
 import model.users.UserManager;
 
@@ -52,7 +52,7 @@ public class InsertController extends HttpServlet {
 		UserDAO userMgmt = new UserManager();
 		try {
 			userMgmt.addPoints((String) login, PONTOS_POR_TOPICO);
-		} catch (InvalidUserError e) {
+		} catch (AuthenticationError e) {
 			response.sendRedirect("logout");
 			return;
 		}

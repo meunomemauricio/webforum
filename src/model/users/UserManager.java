@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserManager implements UserDAO {
 
-	private final String insertQuery = "INSERT INTO users(login, email, name, password, points) VALUES (?, ?, ?, ?, ?);";
+	private final String insertQuery = "INSERT INTO users(login, email, name, pwhash, salt, points) VALUES (?, ?, ?, ?, ?, ?);";
 	private final String retrieveQuery = "SELECT * FROM users WHERE login = ?;";
 	private final String addPointQuery = "UPDATE users SET points = points + ? WHERE login = ?;";
 	private final String rankingQuery = "SELECT * FROM users ORDER BY points DESC;";
@@ -24,11 +24,13 @@ public class UserManager implements UserDAO {
 	}
 
 	@Override
-	public void insert(User u) throws RegistrationError {
-		if (retrieve(u.getLogin()) != null)
+	public void register(User u, String password) throws RegistrationError {
+		try {
+			retrieve(u.getLogin());
 			throw new RegistrationError("Login already registered");
+		} catch (AuthenticationError e) {}
 
-		u.validatePassword();
+		u.genPasswordHash(password);
 
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
@@ -37,8 +39,9 @@ public class UserManager implements UserDAO {
 			stm.setString(1, u.getLogin());
 			stm.setString(2, u.getEmail());
 			stm.setString(3, u.getName());
-			stm.setString(4, u.getPassword());
-			stm.setInt(5, u.getPoints());
+			stm.setString(4, u.getPwHash());
+			stm.setString(5, u.getSalt());
+			stm.setInt(6, u.getPoints());
 			stm.executeUpdate();
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
@@ -46,7 +49,7 @@ public class UserManager implements UserDAO {
 	}
 
 	@Override
-	public User retrieve(String login) {
+	public User retrieve(String login) throws AuthenticationError {
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
 				"postgres", "admin")) {
@@ -54,7 +57,7 @@ public class UserManager implements UserDAO {
 			stm.setString(1, login);
 			ResultSet rs = stm.executeQuery();
 			if (!rs.next()) {
-				return null;
+				throw new AuthenticationError("Invalid user credentials");
 			}
 			return resultSet2Users(rs);
 		} catch (SQLException ex) {
@@ -63,23 +66,13 @@ public class UserManager implements UserDAO {
 	}
 
 	@Override
-	public boolean authenticate(String login, String password) {
-		User u = retrieve(login);
-		if (u == null) {
-			return false;
-		}
-		if (u.getPassword().equals(password)) {
-			return true;
-		}
-		return false;
+	public void authenticate(String login, String password) throws AuthenticationError {
+		retrieve(login).checkPassword(password);
 	}
 
 	@Override
-	public void addPoints(String login, int points) throws InvalidUserError {
-		User u = retrieve(login);
-		if (u == null) {
-			throw new InvalidUserError("Unregistered User");
-		}
+	public void addPoints(String login, int points) throws AuthenticationError {
+		retrieve(login);
 
 		try(Connection con = DriverManager.getConnection(
 				"jdbc:postgresql://localhost/coursera",
@@ -116,10 +109,11 @@ public class UserManager implements UserDAO {
 		String login = rs.getString("login");
 		String email = rs.getString("email");
 		String name = rs.getString("name");
-		String password = rs.getString("password");
+		String pwhash = rs.getString("pwhash");
+		String salt = rs.getString("salt");
 		int points = rs.getInt("points");
 
-		return new User(login, email, name, password, points);
+		return new User(login, email, name, pwhash, salt, points);
 	}
 
 }

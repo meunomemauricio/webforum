@@ -1,3 +1,3 @@
 <dataset>
-	<users login="mauricio" name="Mauricio Freitas" email="mauricio@mail.com" password="p4$$w0rd" points="5"/>
+	<users login="mauricio" name="Mauricio Freitas" email="mauricio@mail.com" pwhash="14CyYPXELtgg3Iuks/ZB53R2D9jfxph0ivNhV5Abr1EMpfnbFA05hQmghpah+L/Y+7GdkNC5wIb6c0NQgZ651Q==" salt="salt" points="5"/>
 </dataset>

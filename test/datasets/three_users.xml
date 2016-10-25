@@ -1,7 +1,7 @@
 <dataset>
-	<users login="joao" email="joao@mail.com" name="Joao" password="joao1234" points="15" />
-	<users login="jose" email="jose@mail.com" name="Jose" password="jose1234" points="5" />
-	<users login="maria" email="maria@mail.com" name="Maria" password="maria1234" points="10" />
+	<users login="joao" email="joao@mail.com" name="Joao" pwhash="RFY56jsMnUyK7/blvC/FpzEkriO2U0+VrtmVtdC32t0vG8JjLfp5qOGj7yJv+JYpkVJcxM7rUc7/rCJAWou0zQ==" salt="salt" points="15" />
+	<users login="jose" email="jose@mail.com" name="Jose" pwhash="2YEuaAuPUOA9PnimblikHPuS1tZov4GqgsNIsWgHTClTW5GSZPtCqpKyjpY1ua/Ad7k9hAHfcTH4qhRTLvtR8g==" salt="salt" points="5" />
+	<users login="maria" email="maria@mail.com" name="Maria" pwhash="smk/MiovPDqMcKcAushgYTXdiALViPnpwnC5ijdQxXtyLe+N6DFOUMcw/c/JEF2fv9n4oQAF2EyvwHJwMSiuTw==" salt="salt" points="10" />
 	<posts />
 	<comments />
 </dataset>

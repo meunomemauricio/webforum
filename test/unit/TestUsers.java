@@ -1,8 +1,5 @@
 package unit;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -18,11 +15,13 @@ import org.dbunit.util.fileloader.FlatXmlDataFileLoader;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.users.InvalidUserError;
+import model.users.AuthenticationError;
 import model.users.RegistrationError;
+import model.users.SaltGenerator;
 import model.users.User;
 import model.users.UserDAO;
 import model.users.UserManager;
+import unit.mocks.MockSaltGenerator;
 
 public class TestUsers {
 
@@ -43,8 +42,9 @@ public class TestUsers {
 	public void registerNewUser() throws Exception {
 		setupDatabase("empty_db.xml");
 
-		User u = new User("mauricio", "mauricio@mail.com", "Mauricio Freitas", "p4$$w0rd");
-		_userMgmt.insert(u);
+		SaltGenerator mockSalt = new MockSaltGenerator();
+		User u = new User("mauricio", "mauricio@mail.com", "Mauricio Freitas", mockSalt);
+		_userMgmt.register(u, "p4$$w0rd");
 
 		verificaDatabase("only_user.xml");
 	}
@@ -53,10 +53,10 @@ public class TestUsers {
 	public void registerAlreadyExistingUser() {
 		setupDatabase("only_user.xml");
 
-		User u = new User("mauricio", "another@email.com", "Another Name", "p4$$w0rd");
+		User u = new User("mauricio", "another@email.com", "Another Name");
 
 		try {
-			_userMgmt.insert(u);
+			_userMgmt.register(u, "p4$$w0rd");
 			fail("User should not have been registered.");
 		} catch (RegistrationError e) {}
 
@@ -68,10 +68,10 @@ public class TestUsers {
 		setupDatabase("empty_db.xml");
 
 		// Password lower limit should be 8 chars
-		User u = new User("mauricio", "mauricio@mail.com", "Mauricio Freitas", "1234567");
+		User u = new User("mauricio", "mauricio@mail.com", "Mauricio Freitas");
 
 		try {
-			_userMgmt.insert(u);
+			_userMgmt.register(u, "1234567");
 			fail("Short password should not be accepted.");
 		} catch (RegistrationError e) {}
 
@@ -87,7 +87,6 @@ public class TestUsers {
 		assertEquals("mauricio", u.getLogin());
 		assertEquals("mauricio@mail.com", u.getEmail());
 		assertEquals("Mauricio Freitas", u.getName());
-		assertEquals("p4$$w0rd", u.getPassword());
 		assertEquals(0, u.getPoints());
 	}
 
@@ -95,28 +94,40 @@ public class TestUsers {
 	public void retrieveNonExistingUser() {
 		setupDatabase("empty_db.xml");
 
-		assertNull(_userMgmt.retrieve("nonexisting"));
+		try {
+			_userMgmt.retrieve("nonexisting");
+			fail("Non existing user should not be able to be retrieved");
+		} catch (AuthenticationError e) {
+		}
+	}
+
+	@Test
+	public void authenticateUserWithCorrectCredentials() throws Exception {
+		setupDatabase("only_user.xml");
+
+		_userMgmt.authenticate("mauricio", "p4$$w0rd");
 	}
 
 	@Test
 	public void authenticateNonRegisteredUser() {
 		setupDatabase("empty_db.xml");
 
-		assertFalse(_userMgmt.authenticate("nonregistered", "password"));
-	}
-
-	@Test
-	public void authenticateUserWithCorrectCredentials(){
-		setupDatabase("only_user.xml");
-
-		assertTrue(_userMgmt.authenticate("mauricio", "p4$$w0rd"));
+		try {
+			_userMgmt.authenticate("nonregistered", "password");
+			fail("Authentication error expected");
+		} catch (AuthenticationError e) {
+		}
 	}
 
 	@Test
 	public void authenticateUserWithWrongPassword() {
 		setupDatabase("only_user.xml");
 
-		assertFalse(_userMgmt.authenticate("mauricio", "incorreta"));
+		try {
+			_userMgmt.authenticate("mauricio", "incorreta");
+			fail("Authentication error expected");
+		} catch (AuthenticationError e) {
+		}
 	}
 
 	@Test
@@ -144,7 +155,7 @@ public class TestUsers {
 		try {
 			_userMgmt.addPoints("inexistente", 5);
 			fail("Should not be able to add points.");
-		} catch (InvalidUserError e) {}
+		} catch (AuthenticationError e) {}
 
 	}
 
@@ -190,9 +201,11 @@ public class TestUsers {
 	public void smallOverallTest() throws Exception {
 		setupDatabase("empty_db.xml");
 
-		_userMgmt.insert(new User("joao", "joao@mail.com", "Joao", "joao1234", 0));
-		_userMgmt.insert(new User("jose", "jose@mail.com", "Jose", "jose1234", 0));
-		_userMgmt.insert(new User("maria", "maria@mail.com", "Maria", "maria1234", 0));
+		SaltGenerator mockSalt = new MockSaltGenerator();
+
+		_userMgmt.register(new User("joao", "joao@mail.com", "Joao", mockSalt), "joao1234");
+		_userMgmt.register(new User("jose", "jose@mail.com", "Jose", mockSalt), "jose1234");
+		_userMgmt.register(new User("maria", "maria@mail.com", "Maria", mockSalt), "maria1234");
 
 		_userMgmt.addPoints("joao", 15);
 		_userMgmt.addPoints("jose", 5);

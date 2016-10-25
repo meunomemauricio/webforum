@@ -16,7 +16,7 @@ import model.comments.CommentsDAO;
 import model.posts.InvalidPost;
 import model.posts.PostDAO;
 import model.posts.PostManager;
-import model.users.InvalidUserError;
+import model.users.AuthenticationError;
 import model.users.UserDAO;
 import model.users.UserManager;
 
@@ -83,7 +83,7 @@ public class PostController extends HttpServlet {
 		UserDAO userMgmt = new UserManager();
 		try {
 			userMgmt.addPoints((String) login, POINTS_PER_COMMENT);
-		} catch (InvalidUserError e) {
+		} catch (AuthenticationError e) {
 			response.sendRedirect("logout");
 			return;
 		}

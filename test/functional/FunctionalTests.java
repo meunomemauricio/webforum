@@ -71,8 +71,6 @@ public class FunctionalTests {
 		goToPage("register");
 		fillRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
 		waitForTitle("Login - Web Forum");
-
-		assertDatabase("only_user.xml");
 	}
 
 	@Test
@@ -120,7 +118,7 @@ public class FunctionalTests {
 		waitUntilErrorMessage();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("Could not authenticate user", error_msg);
+	    assertEquals("Invalid user credentials", error_msg);
 	}
 
 	@Test
@@ -131,7 +129,7 @@ public class FunctionalTests {
 		waitUntilErrorMessage();
 
 		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("Could not authenticate user", error_msg);
+	    assertEquals("Invalid user credentials", error_msg);
 	}
 
 	@Test

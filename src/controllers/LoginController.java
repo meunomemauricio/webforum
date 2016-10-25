@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.users.AuthenticationError;
 import model.users.UserDAO;
 import model.users.UserManager;
 
@@ -28,13 +29,13 @@ public class LoginController extends HttpServlet {
 		String password = request.getParameter("password");
 		UserDAO users = new UserManager();
 		HttpSession session = request.getSession();
-		if (users.authenticate(login, password)) {
+		try {
+			users.authenticate(login, password);
 			session.setAttribute("login", login);
 			response.sendRedirect("posts");
-		}
-		else {
+		} catch (AuthenticationError e) {
 			session.removeAttribute("login");
-			request.setAttribute("msgError", "Could not authenticate user");
+			request.setAttribute("msgError", e.getMessage());
 			doGet(request, response);
 		}
 	}

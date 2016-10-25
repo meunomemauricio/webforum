@@ -32,7 +32,7 @@ public class RegisterController extends HttpServlet {
 
 		UserDAO users = new UserManager();
 		try {
-			users.insert(new User(login, email, name, password));
+			users.register(new User(login, email, name), password);
 		} catch (RegistrationError e) {
 			request.setAttribute("msgError", e.getMessage());
 			doGet(request, response);
