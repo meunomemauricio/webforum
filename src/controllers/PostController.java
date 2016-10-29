@@ -66,13 +66,17 @@ public class PostController extends HttpServlet {
 			return;
 		}
 
-		String comment = request.getParameter("comment");
-
 		int postId;
 		try {
 			postId = Integer.parseInt(request.getParameter("postId"));
 		} catch (NumberFormatException e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+
+		String comment = request.getParameter("comment");
+		if (comment == null || comment.isEmpty()) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 

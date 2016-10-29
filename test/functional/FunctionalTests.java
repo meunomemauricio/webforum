@@ -3,7 +3,13 @@ package functional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.dbunit.JdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
@@ -14,6 +20,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -167,6 +174,38 @@ public class FunctionalTests {
 	    _driver.findElement(By.cssSelector("textarea:invalid"));
 	}
 
+	@Test
+	public void postCommentWithoutContent() throws Exception {
+		setupDatabase("only_post.xml");
+
+		doLogin("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+
+		_driver.findElement(By.cssSelector("p.list-item-title")).click();
+		waitForTitle("First Post - Web Forum");
+
+		String url = baseUrl + "post";
+		String params = String.format("postId=%s", getPostIdFromCurrentURL());
+		Set<Cookie> cookies = _driver.manage().getCookies();
+		assertEquals(400, sendPost(url, params, cookies));
+	}
+
+	@Test
+	public void postCommentWithEmptyContent() throws Exception {
+		setupDatabase("only_post.xml");
+
+		doLogin("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+
+		_driver.findElement(By.cssSelector("p.list-item-title")).click();
+		waitForTitle("First Post - Web Forum");
+
+		String url = baseUrl + "post";
+		String params = String.format("postId=%s&comment=", getPostIdFromCurrentURL());
+		Set<Cookie> cookies = _driver.manage().getCookies();
+		assertEquals(400, sendPost(url, params, cookies));
+	}
+
 	private void goToPage(String page) {
 		_driver.get(baseUrl + page);
 	}
@@ -221,5 +260,38 @@ public class FunctionalTests {
 		} catch (Exception e) {
 			throw new RuntimeException("Could not load XML file: " + e);
 		}
+	}
+
+	private int sendPost(String url, String urlParameters, Set<Cookie> cookies) throws Exception {
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+		con.setRequestMethod("POST");
+
+		// Set Cookies
+		for (Cookie c: cookies) {
+			String cookie = String.format("%s=%s", c.getName(), c.getValue());
+			con.setRequestProperty("Cookie", cookie);
+		}
+
+		// Send post request
+		con.setDoOutput(true);
+		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+		wr.writeBytes(urlParameters);
+		wr.flush();
+		wr.close();
+
+		return con.getResponseCode();
+	}
+
+	private String getPostIdFromCurrentURL() throws Exception {
+		String url = _driver.getCurrentUrl();
+		Pattern p = Pattern.compile(".*?id=(\\d+)");
+		Matcher m = p.matcher(url);
+
+		if (m.find())
+			return m.group(1);
+		else
+			throw new Exception("Could not extract id from URL: " + url);
 	}
 }
