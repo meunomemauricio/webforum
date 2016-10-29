@@ -25,7 +25,7 @@
 
 		<form class="cmt-form" action="post" method="post">
 			<input type="hidden" name="postId" value="${post.getId()}">
-			<textarea placeholder="write you comment..." name="comment"></textarea>
+			<textarea placeholder="write you comment..." name="comment" required></textarea>
 			<button>submit</button>
 		</form>
 	</div>

@@ -3,14 +3,10 @@ package functional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
-import org.dbunit.Assertion;
 import org.dbunit.JdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.util.fileloader.DataFileLoader;
 import org.dbunit.util.fileloader.FlatXmlDataFileLoader;
 import org.junit.AfterClass;
@@ -79,12 +75,7 @@ public class FunctionalTests {
 
 		goToPage("register");
 		fillRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
-		waitUntilErrorMessage();
-
-		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("Login already registered", error_msg);
-
-		assertDatabase("only_user.xml");
+		waitUntilErrorMessage("Login already registered");
 	}
 
 	@Test
@@ -93,12 +84,7 @@ public class FunctionalTests {
 
 		goToPage("register");
 		fillRegisterForm("mauricio", "123457", "Mauricio Freitas", "mauricio@mail.com");
-		waitUntilErrorMessage();
-
-		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("Password too short", error_msg);
-
-		setupDatabase("empty_db.xml");
+		waitUntilErrorMessage("Password too short");
 	}
 
 	@Test
@@ -115,10 +101,7 @@ public class FunctionalTests {
 		setupDatabase("only_user.xml");
 
 		doLogin("inexistente", "anypw");
-		waitUntilErrorMessage();
-
-		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("Invalid user credentials", error_msg);
+		waitUntilErrorMessage("Invalid user credentials");
 	}
 
 	@Test
@@ -126,19 +109,13 @@ public class FunctionalTests {
 		setupDatabase("only_user.xml");
 
 		doLogin("mauricio", "wrongpw");
-		waitUntilErrorMessage();
-
-		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("Invalid user credentials", error_msg);
+		waitUntilErrorMessage("Invalid user credentials");
 	}
 
 	@Test
 	public void postsPageWithoutLogin() throws Exception {
 		goToPage("posts");
-		waitUntilErrorMessage();
-
-		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
-	    assertEquals("It's necessary to be logged in to load that page.", error_msg);
+		waitUntilErrorMessage("It's necessary to be logged in to load that page.");
 	}
 
 	@Test
@@ -168,11 +145,26 @@ public class FunctionalTests {
 		_driver.findElement(By.cssSelector("p.list-item-title")).click();
 		waitForTitle("First Post - Web Forum");
 
-	    fillCommentForm("First Comment");
+	    fillAndSubmitCommentForm("First Comment");
 	    _wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.topic-cmt")));
 
 	    String comment = _driver.findElement(By.cssSelector("p.topic-cmt-text")).getText();
 		assertEquals("First Comment", comment);
+	}
+
+	@Test
+	public void submitEmptyComment() throws Exception {
+		setupDatabase("only_post.xml");
+
+		doLogin("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+
+		_driver.findElement(By.cssSelector("p.list-item-title")).click();
+		waitForTitle("First Post - Web Forum");
+
+	    fillAndSubmitCommentForm("");
+
+	    _driver.findElement(By.cssSelector("textarea:invalid"));
 	}
 
 	private void goToPage(String page) {
@@ -190,8 +182,11 @@ public class FunctionalTests {
 		_wait.until(ExpectedConditions.titleIs(title));
 	}
 
-	private void waitUntilErrorMessage() {
+	private void waitUntilErrorMessage(String message) {
 		_wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("p.error")));
+
+		String error_msg = _driver.findElement(By.cssSelector("p.error")).getText();
+	    assertEquals(message, error_msg);
 	}
 
 	private void fillRegisterForm(String login, String password, String name, String email) {
@@ -211,7 +206,7 @@ public class FunctionalTests {
 	}
 
 
-	private void fillCommentForm(String comment) {
+	private void fillAndSubmitCommentForm(String comment) {
 		_driver.findElement(By.name("comment")).clear();
 	    _driver.findElement(By.name("comment")).sendKeys(comment);
 	    _driver.findElement(By.cssSelector("button")).click();
@@ -227,18 +222,4 @@ public class FunctionalTests {
 			throw new RuntimeException("Could not load XML file: " + e);
 		}
 	}
-
-	private void assertDatabase(String file) {
-		try {
-			IDataSet databaseDataSet = _jdt.getConnection().createDataSet();
-			ITable actualTable = databaseDataSet.getTable("users");
-			IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(
-					new File(String.format("test//datasets/%s", file)));
-			ITable expectedTable = expectedDataSet.getTable("users");
-			Assertion.assertEquals(expectedTable, actualTable);
-		} catch (Exception e) {
-			throw new RuntimeException("Could not assert tables:" + e);
-		}
-	}
-
 }
