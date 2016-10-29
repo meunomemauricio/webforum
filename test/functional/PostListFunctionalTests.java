@@ -14,6 +14,12 @@ public class PostListFunctionalTests extends FunctionalTests {
 	}
 
 	@Test
+	public void insertPostPageWithoutLogin() throws Exception {
+		goToPage("insert");
+		waitUntilErrorMessage("It's necessary to be logged in to load that page.");
+	}
+
+	@Test
 	public void createNewPost() throws Exception {
 		setupDatabase("only_user.xml");
 
