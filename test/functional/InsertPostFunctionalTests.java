@@ -2,13 +2,16 @@ package functional;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Set;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 
-public class PostListFunctionalTests extends FunctionalTests {
+public class InsertPostFunctionalTests extends FunctionalTests {
 
 	@Test
-	public void postsPageWithoutLogin() throws Exception {
+	public void postListPageWithoutLogin() throws Exception {
 		goToPage("posts");
 		waitUntilErrorMessage("It's necessary to be logged in to load that page.");
 	}
@@ -66,4 +69,47 @@ public class PostListFunctionalTests extends FunctionalTests {
 		assertEquals("First Post", title);
 	}
 
+	@Test
+	public void postInsertionWithoutTitle() throws Exception {
+		setupDatabase("only_user.xml");
+
+		doLogin("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+
+		Set<Cookie> cookies = _driver.manage().getCookies();
+		assertEquals(400, sendPost("insert", "content=content", cookies));
+	}
+
+	@Test
+	public void postInsertionEmptyTitle() throws Exception {
+		setupDatabase("only_user.xml");
+
+		doLogin("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+
+		Set<Cookie> cookies = _driver.manage().getCookies();
+		assertEquals(400, sendPost("insert", "title&content=content", cookies));
+	}
+
+	@Test
+	public void postInsertionWithoutContent() throws Exception {
+		setupDatabase("only_user.xml");
+
+		doLogin("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+
+		Set<Cookie> cookies = _driver.manage().getCookies();
+		assertEquals(400, sendPost("insert", "title=title", cookies));
+	}
+
+	@Test
+	public void postInsertionEmptyContent() throws Exception {
+		setupDatabase("only_user.xml");
+
+		doLogin("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+
+		Set<Cookie> cookies = _driver.manage().getCookies();
+		assertEquals(400, sendPost("insert", "title=title&content", cookies));
+	}
 }

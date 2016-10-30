@@ -44,7 +44,15 @@ public class InsertController extends HttpServlet {
 		}
 
 		String title = request.getParameter("title");
+		if (title == null || title.isEmpty()) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
 		String content = request.getParameter("content");
+		if (content == null || content.isEmpty()) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
 
 		PostDAO postMgmt = new PostManager();
 		postMgmt.insert(new Post(title, content, (String) login));
