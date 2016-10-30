@@ -31,5 +31,20 @@ public class RegisterFunctionalTests extends FunctionalTests {
 		waitUntilErrorMessage("Password too short");
 	}
 
+	@Test
+	public void registerEmptyLogin() throws Exception {
+		goToPage("register");
+		fillRegisterForm("", "", "", "");
+
+		expectInvalidInputField("login");
+	}
+
+	@Test
+	public void registerEmptyPassword() throws Exception {
+		goToPage("register");
+		fillRegisterForm("mauricio", "", "", "");
+
+		expectInvalidInputField("password");
+	}
 
 }

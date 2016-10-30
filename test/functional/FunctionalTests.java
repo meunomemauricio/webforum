@@ -21,6 +21,7 @@ import org.junit.BeforeClass;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -110,6 +111,11 @@ public class FunctionalTests {
 		_driver.findElement(By.name("comment")).clear();
 	    _driver.findElement(By.name("comment")).sendKeys(comment);
 	    _driver.findElement(By.cssSelector("button")).click();
+	}
+
+	protected void expectInvalidInputField(String fieldName) {
+	    WebElement elem = _driver.findElement(By.cssSelector("input:invalid"));
+	    assertEquals(fieldName, elem.getAttribute("name"));
 	}
 
 	protected void setupDatabase(String file) {

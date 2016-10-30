@@ -11,8 +11,8 @@
 		<div class="form">
 			<p class="form-title">Crie uma nova conta:</p>
 			<form class="cadastro-form" action="register" method="post">
-				<input type="text" name="login" placeholder="login"/>
-				<input type="password" name="password" placeholder="password"/>
+				<input type="text" name="login" placeholder="login" required/>
+				<input type="password" name="password" placeholder="password" required/>
 				<input type="text" name="name" placeholder="name (optional)"/>
 				<input type="text" name="email" placeholder="email (optional)"/>
 				<button>register</button>
