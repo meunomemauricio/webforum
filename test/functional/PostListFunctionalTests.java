@@ -20,6 +20,36 @@ public class PostListFunctionalTests extends FunctionalTests {
 	}
 
 	@Test
+	public void createNewPostEmptyTitle() throws Exception {
+		setupDatabase("only_user.xml");
+
+		doLogin("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+
+		_driver.findElement(By.linkText("+ New Post")).click();
+		waitForTitle("New Post - Web Forum");
+
+		fillAndSubmitPostForm("", "Any Content");
+
+		expectInvalidInputField("title");
+	}
+
+	@Test
+	public void createNewPostEmptyContent() throws Exception {
+		setupDatabase("only_user.xml");
+
+		doLogin("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+
+		_driver.findElement(By.linkText("+ New Post")).click();
+		waitForTitle("New Post - Web Forum");
+
+		fillAndSubmitPostForm("Title", "");
+
+		expectInvalidTextArea("content");
+	}
+
+	@Test
 	public void createNewPost() throws Exception {
 		setupDatabase("only_user.xml");
 
@@ -29,7 +59,7 @@ public class PostListFunctionalTests extends FunctionalTests {
 		_driver.findElement(By.linkText("+ New Post")).click();
 		waitForTitle("New Post - Web Forum");
 
-		fillPostForm("First Post", "First Post Content");
+		fillAndSubmitPostForm("First Post", "First Post Content");
 		waitForTitle("Posts - Web Forum");
 
 		String title = _driver.findElement(By.cssSelector("p.list-item-title")).getText();

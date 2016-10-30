@@ -40,7 +40,7 @@ public class CommentsFunctionalTests extends FunctionalTests {
 
 	    fillAndSubmitCommentForm("");
 
-	    _driver.findElement(By.cssSelector("textarea:invalid"));
+		expectInvalidTextArea("comment");
 	}
 
 	@Test

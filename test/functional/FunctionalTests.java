@@ -98,14 +98,13 @@ public class FunctionalTests {
 		_driver.findElement(By.cssSelector("button")).click();
 	}
 
-	protected void fillPostForm(String title, String content) {
+	protected void fillAndSubmitPostForm(String title, String content) {
 		_driver.findElement(By.name("title")).clear();
 		_driver.findElement(By.name("content")).clear();
 		_driver.findElement(By.name("title")).sendKeys(title);
 		_driver.findElement(By.name("content")).sendKeys(content);
 		_driver.findElement(By.cssSelector("button")).click();
 	}
-
 
 	protected void fillAndSubmitCommentForm(String comment) {
 		_driver.findElement(By.name("comment")).clear();
@@ -115,6 +114,11 @@ public class FunctionalTests {
 
 	protected void expectInvalidInputField(String fieldName) {
 	    WebElement elem = _driver.findElement(By.cssSelector("input:invalid"));
+	    assertEquals(fieldName, elem.getAttribute("name"));
+	}
+
+	protected void expectInvalidTextArea(String fieldName) {
+	    WebElement elem = _driver.findElement(By.cssSelector("textarea:invalid"));
 	    assertEquals(fieldName, elem.getAttribute("name"));
 	}
 

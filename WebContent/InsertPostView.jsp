@@ -10,8 +10,8 @@
 	<div class="insert-form">
 		<form action="insert" method="post">
 			<p class="form-title">Write the content of the new post:</p>
-			<input type="text" placeholder="title" name="title"/>
-			<textarea placeholder="post content" name="content"></textarea>
+			<input type="text" placeholder="title" name="title" required/>
+			<textarea placeholder="post content" name="content" required></textarea>
 			<button>submit</button>
 			<% if (request.getAttribute("msgError") != null) { %>
 				<p class="error">${msgError}</p>
