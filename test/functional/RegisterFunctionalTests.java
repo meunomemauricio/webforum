@@ -1,5 +1,7 @@
 package functional;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 public class RegisterFunctionalTests extends FunctionalTests {
@@ -47,4 +49,23 @@ public class RegisterFunctionalTests extends FunctionalTests {
 		expectInvalidInputField("password");
 	}
 
+	@Test
+	public void postRegistrationWithoutLogin() throws Exception {
+		assertEquals(400, sendPost("register", ""));
+	}
+
+	@Test
+	public void postRegistrationEmptyLogin() throws Exception {
+		assertEquals(400, sendPost("register", "login"));
+	}
+
+	@Test
+	public void postRegistrationWithoutPassword() throws Exception {
+		assertEquals(400, sendPost("register", "login=login"));
+	}
+
+	@Test
+	public void postRegistrationEmptyPassword() throws Exception {
+		assertEquals(400, sendPost("register", "login=login&password"));
+	}
 }

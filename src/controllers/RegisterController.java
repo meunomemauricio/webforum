@@ -26,9 +26,17 @@ public class RegisterController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("login");
+		if (login == null || login.isEmpty()) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+		String password = request.getParameter("password");
+		if (password == null || password.isEmpty()) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
-		String password = request.getParameter("password");
 
 		UserDAO users = new UserManager();
 		try {

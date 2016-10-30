@@ -53,10 +53,9 @@ public class CommentsFunctionalTests extends FunctionalTests {
 		_driver.findElement(By.cssSelector("p.list-item-title")).click();
 		waitForTitle("First Post - Web Forum");
 
-		String url = baseUrl + "post";
 		String params = String.format("postId=%s", getPostIdFromCurrentURL());
 		Set<Cookie> cookies = _driver.manage().getCookies();
-		assertEquals(400, sendPost(url, params, cookies));
+		assertEquals(400, sendPost("post", params, cookies));
 	}
 
 	@Test
@@ -69,11 +68,8 @@ public class CommentsFunctionalTests extends FunctionalTests {
 		_driver.findElement(By.cssSelector("p.list-item-title")).click();
 		waitForTitle("First Post - Web Forum");
 
-		String url = baseUrl + "post";
 		String params = String.format("postId=%s&comment=", getPostIdFromCurrentURL());
 		Set<Cookie> cookies = _driver.manage().getCookies();
-		assertEquals(400, sendPost(url, params, cookies));
+		assertEquals(400, sendPost("post", params, cookies));
 	}
-
-
 }

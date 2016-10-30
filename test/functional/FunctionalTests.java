@@ -129,10 +129,24 @@ public class FunctionalTests {
 		}
 	}
 
-	protected int sendPost(String url, String urlParameters, Set<Cookie> cookies) throws Exception {
-		URL obj = new URL(url);
+	protected int sendPost(String url, String urlParameters) throws Exception {
+		URL obj = new URL(baseUrl + url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		con.setRequestMethod("POST");
 
+		// Send post request
+		con.setDoOutput(true);
+		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+		wr.writeBytes(urlParameters);
+		wr.flush();
+		wr.close();
+
+		return con.getResponseCode();
+	}
+
+	protected int sendPost(String url, String urlParameters, Set<Cookie> cookies) throws Exception {
+		URL obj = new URL(baseUrl + url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("POST");
 
 		// Set Cookies
