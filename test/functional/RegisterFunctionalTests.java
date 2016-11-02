@@ -3,6 +3,7 @@ package functional;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 public class RegisterFunctionalTests extends FunctionalTests {
 
@@ -11,8 +12,10 @@ public class RegisterFunctionalTests extends FunctionalTests {
 		setupDatabase("empty_db.xml");
 
 		goToPage("register");
-		fillRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
+		fillAndSubmitRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
 		waitForTitle("Login - Web Forum");
+
+		assertRegisterMessage("New account created successfully");
 	}
 
 	@Test
@@ -20,7 +23,7 @@ public class RegisterFunctionalTests extends FunctionalTests {
 		setupDatabase("only_user.xml");
 
 		goToPage("register");
-		fillRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
+		fillAndSubmitRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
 		waitUntilErrorMessage("Login already registered");
 	}
 
@@ -29,14 +32,14 @@ public class RegisterFunctionalTests extends FunctionalTests {
 		setupDatabase("empty_db.xml");
 
 		goToPage("register");
-		fillRegisterForm("mauricio", "123457", "Mauricio Freitas", "mauricio@mail.com");
+		fillAndSubmitRegisterForm("mauricio", "123457", "Mauricio Freitas", "mauricio@mail.com");
 		waitUntilErrorMessage("Password too short");
 	}
 
 	@Test
 	public void registerEmptyLogin() throws Exception {
 		goToPage("register");
-		fillRegisterForm("", "", "", "");
+		fillAndSubmitRegisterForm("", "", "", "");
 
 		expectInvalidInputField("login");
 	}
@@ -44,7 +47,7 @@ public class RegisterFunctionalTests extends FunctionalTests {
 	@Test
 	public void registerEmptyPassword() throws Exception {
 		goToPage("register");
-		fillRegisterForm("mauricio", "", "", "");
+		fillAndSubmitRegisterForm("mauricio", "", "", "");
 
 		expectInvalidInputField("password");
 	}
@@ -68,4 +71,11 @@ public class RegisterFunctionalTests extends FunctionalTests {
 	public void postRegistrationEmptyPassword() throws Exception {
 		assertEquals(400, sendPost("register", "login=login&password"));
 	}
+
+	private void assertRegisterMessage(String message) {
+		String regMessage = _driver.findElement(By.id("reg_msg")).getText();
+		assertEquals(message, regMessage);
+	}
 }
+
+

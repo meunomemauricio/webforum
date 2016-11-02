@@ -9,6 +9,9 @@
 <body>
 	<div class="login-page">
 		<div class="form">
+			<% if (request.getAttribute("regMessage") != null) { %>
+				<p id="reg_msg" class="form-title">${regMessage}</p>
+			<% } %>
 			<p class="form-title">Login with your credentials:</p>
 			<form class="login-form" action="login" method="post">
 				<input type="text" placeholder="login" name="login"/>

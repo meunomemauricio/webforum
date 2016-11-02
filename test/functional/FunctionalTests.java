@@ -90,7 +90,7 @@ public class FunctionalTests {
 	    assertEquals(message, error_msg);
 	}
 
-	protected void fillRegisterForm(String login, String password, String name, String email) {
+	protected void fillAndSubmitRegisterForm(String login, String password, String name, String email) {
 		_driver.findElement(By.name("login")).sendKeys(login);
 		_driver.findElement(By.name("password")).sendKeys(password);
 		_driver.findElement(By.name("name")).sendKeys(name);

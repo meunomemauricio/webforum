@@ -47,6 +47,7 @@ public class RegisterController extends HttpServlet {
 			return;
 		}
 
+		request.getSession().setAttribute("regSuccess", true);
 		response.sendRedirect("login");
 	}
 

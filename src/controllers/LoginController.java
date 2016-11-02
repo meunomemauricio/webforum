@@ -20,7 +20,21 @@ public class LoginController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		displayMsgIfFirstLogin(request);
 		request.getRequestDispatcher("LoginView.jsp").forward(request, response);
+	}
+
+	/**
+	 * Display message on the first login after account creation.
+	 *
+	 * @param request Servlet request object
+	 */
+	private void displayMsgIfFirstLogin(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		if (session.getAttribute("regSuccess") != null) {
+			request.setAttribute("regMessage", "New account created successfully");
+			session.removeAttribute("regSuccess");
+		}
 	}
 
 	@Override
