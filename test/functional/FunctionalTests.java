@@ -184,4 +184,12 @@ public class FunctionalTests {
 		String regMessage = _driver.findElement(By.id("reg_msg")).getText();
 		assertEquals(message, regMessage);
 	}
+
+	protected void clickItemByID(String id) {
+		_driver.findElement(By.id(id)).click();
+	}
+
+	protected void waitForNumberOfVotes(String votes) {
+		_wait.until(ExpectedConditions.textToBe(By.id("votes"), votes));
+	}
 }
