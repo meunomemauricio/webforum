@@ -15,7 +15,7 @@ public class CommentsFunctionalTests extends FunctionalTests {
 	public void createNewComment() throws Exception {
 		setupDatabase("only_post.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.cssSelector("p.list-item-title")).click();
@@ -29,10 +29,25 @@ public class CommentsFunctionalTests extends FunctionalTests {
 	}
 
 	@Test
+	public void createNewCommentWithSpecialCharacters() throws Exception {
+		setupDatabase("only_post.xml");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+		_driver.findElement(By.cssSelector("p.list-item-title")).click();
+		waitForTitle("First Post - Web Forum");
+
+	    fillAndSubmitCommentForm("Fírßt Cømm€nŧ");
+	    _wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.topic-cmt")));
+
+	    String comment = _driver.findElement(By.cssSelector("p.topic-cmt-text")).getText();
+		assertEquals("Fírßt Cømm€nŧ", comment);
+	}
+
+	@Test
 	public void submitEmptyComment() throws Exception {
 		setupDatabase("only_post.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.cssSelector("p.list-item-title")).click();
@@ -47,7 +62,7 @@ public class CommentsFunctionalTests extends FunctionalTests {
 	public void postCommentWithoutContent() throws Exception {
 		setupDatabase("only_post.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.cssSelector("p.list-item-title")).click();
@@ -62,7 +77,7 @@ public class CommentsFunctionalTests extends FunctionalTests {
 	public void postCommentWithEmptyContent() throws Exception {
 		setupDatabase("only_post.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.cssSelector("p.list-item-title")).click();

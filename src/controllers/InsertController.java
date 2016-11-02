@@ -36,6 +36,8 @@ public class InsertController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+
 		Object login = request.getSession().getAttribute("login");
 		if (login == null) {
 			request.setAttribute("msgError", "It's necessary to be logged in to load that page.");

@@ -26,7 +26,7 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void createNewPostEmptyTitle() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.linkText("+ New Post")).click();
@@ -41,7 +41,7 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void createNewPostEmptyContent() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.linkText("+ New Post")).click();
@@ -56,7 +56,7 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void createNewPost() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		_driver.findElement(By.linkText("+ New Post")).click();
@@ -70,10 +70,25 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	}
 
 	@Test
+	public void createNewPostWithSpecialCharacters() throws Exception {
+		setupDatabase("only_user.xml");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
+		waitForTitle("Posts - Web Forum");
+		_driver.findElement(By.linkText("+ New Post")).click();
+		waitForTitle("New Post - Web Forum");
+
+		fillAndSubmitPostForm("Fírßt Pøsŧ", "Fírst Pøst ©ont€nt");
+		waitForTitle("Posts - Web Forum");
+
+		String title = _driver.findElement(By.cssSelector("p.list-item-title")).getText();
+		assertEquals("Fírßt Pøsŧ", title);
+	}
+
+	@Test
 	public void postInsertionWithoutTitle() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		Set<Cookie> cookies = _driver.manage().getCookies();
@@ -84,7 +99,7 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void postInsertionEmptyTitle() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		Set<Cookie> cookies = _driver.manage().getCookies();
@@ -95,7 +110,7 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void postInsertionWithoutContent() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		Set<Cookie> cookies = _driver.manage().getCookies();
@@ -106,7 +121,7 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void postInsertionEmptyContent() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
 		waitForTitle("Posts - Web Forum");
 
 		Set<Cookie> cookies = _driver.manage().getCookies();

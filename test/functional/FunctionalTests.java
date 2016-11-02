@@ -72,7 +72,7 @@ public class FunctionalTests {
 		_driver.get(baseUrl + page);
 	}
 
-	protected void doLogin(String login, String password) {
+	protected void fillAndSubmitLoginForm(String login, String password) {
 		goToPage("login");
 		_driver.findElement(By.name("login")).sendKeys(login);
 		_driver.findElement(By.name("password")).sendKeys(password);
@@ -178,5 +178,10 @@ public class FunctionalTests {
 			return m.group(1);
 		else
 			throw new Exception("Could not extract id from URL: " + url);
+	}
+
+	protected void assertRegisterMessage(String message) {
+		String regMessage = _driver.findElement(By.id("reg_msg")).getText();
+		assertEquals(message, regMessage);
 	}
 }

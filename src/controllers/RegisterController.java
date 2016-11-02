@@ -25,6 +25,8 @@ public class RegisterController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+
 		String login = request.getParameter("login");
 		if (login == null || login.isEmpty()) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);

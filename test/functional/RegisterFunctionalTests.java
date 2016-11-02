@@ -3,7 +3,6 @@ package functional;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 public class RegisterFunctionalTests extends FunctionalTests {
 
@@ -70,11 +69,6 @@ public class RegisterFunctionalTests extends FunctionalTests {
 	@Test
 	public void postRegistrationEmptyPassword() throws Exception {
 		assertEquals(400, sendPost("register", "login=login&password"));
-	}
-
-	private void assertRegisterMessage(String message) {
-		String regMessage = _driver.findElement(By.id("reg_msg")).getText();
-		assertEquals(message, regMessage);
 	}
 }
 

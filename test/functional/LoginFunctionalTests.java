@@ -8,7 +8,20 @@ public class LoginFunctionalTests extends FunctionalTests {
 	public void sucessfulLogin() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "p4$$w0rd");
+		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
+
+		waitForTitle("Posts - Web Forum");
+	}
+
+	@Test
+	public void loginUserWithSpecialCharacters() throws Exception {
+		setupDatabase("empty_db.xml");
+		goToPage("register");
+		fillAndSubmitRegisterForm("maurício", "p4ßwórd_", "", "");
+		waitForTitle("Login - Web Forum");
+		assertRegisterMessage("New account created successfully");
+
+		fillAndSubmitLoginForm("maurício", "p4ßwórd_");
 
 		waitForTitle("Posts - Web Forum");
 	}
@@ -17,7 +30,8 @@ public class LoginFunctionalTests extends FunctionalTests {
 	public void unregisteredUserLogin() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("inexistente", "anypw");
+		fillAndSubmitLoginForm("inexistente", "anypw");
+
 		waitUntilErrorMessage("Invalid user credentials");
 	}
 
@@ -25,8 +39,8 @@ public class LoginFunctionalTests extends FunctionalTests {
 	public void wrongPasswordLogin() throws Exception {
 		setupDatabase("only_user.xml");
 
-		doLogin("mauricio", "wrongpw");
+		fillAndSubmitLoginForm("mauricio", "wrongpw");
+
 		waitUntilErrorMessage("Invalid user credentials");
 	}
-
 }
