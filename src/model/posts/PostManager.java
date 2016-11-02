@@ -13,6 +13,7 @@ public class PostManager implements PostDAO {
 	private final String insertQuery = "INSERT INTO posts(title, content, login, votes) VALUES (?, ?, ?, ?);";
 	private final String listQuery = "SELECT * FROM posts ORDER BY post_id DESC;";
 	private final String recuperaQuery = "SELECT * FROM posts WHERE post_id=?;";
+	private final String addPointQuery = "UPDATE posts SET votes = votes + ? WHERE post_id = ?;";
 
 	static {
 		try {
@@ -81,4 +82,19 @@ public class PostManager implements PostDAO {
 		}
 	}
 
+	@Override
+	public void addVotes(int id, int ammount) throws InvalidPost {
+		retrieve(id);
+
+		try(Connection con = DriverManager.getConnection(
+				"jdbc:postgresql://localhost/coursera",
+				"postgres", "admin")) {
+			PreparedStatement stm = con.prepareStatement(addPointQuery);
+			stm.setInt(1, ammount);
+			stm.setInt(2, id);
+			stm.executeUpdate();
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 }

@@ -91,6 +91,52 @@ public class TestPosts {
 		} catch (InvalidPost e) {};
 	}
 
+	@Test
+	public void addVotesToExistingPost() throws Exception {
+		setupDatabase("only_post.xml");
+		List<Post> posts = _postMgmt.listPosts();
+		Post post = posts.get(0);
+		int id = post.getId();
+
+		_postMgmt.addVotes(id, 5);
+
+        assertDatabase("post_with_5_votes.xml");
+	}
+
+	@Test
+	public void incrementExistingPoints() throws Exception {
+		setupDatabase("post_with_5_votes.xml");
+		List<Post> posts = _postMgmt.listPosts();
+		Post post = posts.get(0);
+		int id = post.getId();
+
+		_postMgmt.addVotes(id, 5);
+
+		assertDatabase("post_with_10_votes.xml");
+	}
+
+	@Test
+	public void negativeVotes() throws Exception {
+		setupDatabase("post_with_5_votes.xml");
+		List<Post> posts = _postMgmt.listPosts();
+		Post post = posts.get(0);
+		int id = post.getId();
+
+		_postMgmt.addVotes(id, -10);
+
+		assertDatabase("post_with_negative_votes.xml");
+	}
+
+	@Test
+	public void addVotesToInvalidPost() {
+		setupDatabase("empty_db.xml");
+
+		try {
+			_postMgmt.addVotes(0, 5);
+			fail("Should not be able to add votes.");
+		} catch (InvalidPost e) {}
+	}
+
 	private void setupDatabase(String file) {
 		DataFileLoader loader = new FlatXmlDataFileLoader();
 		IDataSet dataSet = loader.load(String.format("/datasets/%s", file));
