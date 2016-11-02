@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,9 +15,9 @@
 			<span class="header-link-r"><a class="header-link" href="logout">✗ Logout</a></span>
 		</p>
 	</div>
-	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 	<c:forEach var="post" items="${postList}">
 		<a href="post?id=${post.getId()}" class="list-topic-item">
+			<p class="list-item-votes">${post.getVotes()}</p>
 			<p class="list-item-title">${post.getTitle()}</p>
 		    <p class="list-item-user">by: <span class="list-item-user">${post.getLogin()}</span></p>
 		</a>
