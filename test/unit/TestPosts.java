@@ -151,15 +151,11 @@ public class TestPosts {
 	private void assertDatabase(String file) {
 		try {
 			IDataSet databaseDataSet = _jdt.getConnection().createDataSet();
-			ITable actualTable = databaseDataSet.getTable("users");
 			IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(
 					new File(String.format("test//datasets/%s", file)));
 
-			ITable expectedTable = expectedDataSet.getTable("users");
-			Assertion.assertEquals(expectedTable, actualTable);
-
-			actualTable = databaseDataSet.getTable("posts");
-			expectedTable = expectedDataSet.getTable("posts");
+			ITable actualTable = databaseDataSet.getTable("posts");
+			ITable expectedTable = expectedDataSet.getTable("posts");
 			// It's necessary to exclude the post_id column from verification
 			ITable filteredTable = DefaultColumnFilter.includedColumnsTable(
 					actualTable, expectedTable.getTableMetaData().getColumns());
@@ -168,6 +164,4 @@ public class TestPosts {
 			throw new RuntimeException("Não foi possível verificar Tabela:" + e);
 		}
 	}
-
-
 }

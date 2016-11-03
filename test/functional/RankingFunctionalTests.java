@@ -38,6 +38,7 @@ public class RankingFunctionalTests extends FunctionalTests {
 		clickItemByID("rUpvote");
 
 		waitForNumberOfVotes("6");
+		verifyRankingPosition("mauricio", "1", "6");
 	}
 
 	@Test
@@ -51,6 +52,7 @@ public class RankingFunctionalTests extends FunctionalTests {
 		clickItemByID("rDownvote");
 
 		waitForNumberOfVotes("4");
+		verifyRankingPosition("mauricio", "1", "4");
 	}
 
 	@Test

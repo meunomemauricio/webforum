@@ -9,8 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.posts.InvalidPost;
+import model.posts.Post;
 import model.posts.PostDAO;
 import model.posts.PostManager;
+import model.users.AuthenticationError;
+import model.users.UserDAO;
+import model.users.UserManager;
 
 @WebServlet("/vote")
 public class VoteController extends HttpServlet {
@@ -40,10 +44,22 @@ public class VoteController extends HttpServlet {
 		}
 
 		PostDAO postMgmt = new PostManager();
+		Post post;
 		try {
 			postMgmt.addVotes(postId, votes);
+			post = postMgmt.retrieve(postId);
 		} catch (InvalidPost e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+
+		UserDAO userMgmt = new UserManager();
+		try {
+			userMgmt.addPoints(post.getLogin(), votes);
+		} catch (AuthenticationError e) {
+			// Since the login comes from the post, if this exception happens,
+			// something very wrong went in the model.
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return;
 		}
 

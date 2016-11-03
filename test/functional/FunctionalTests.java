@@ -192,4 +192,21 @@ public class FunctionalTests {
 	protected void waitForNumberOfVotes(String votes) {
 		_wait.until(ExpectedConditions.textToBe(By.id("votes"), votes));
 	}
+
+	protected void verifyRankingPosition(String login, String position, String points) {
+		goToPage("ranking");
+		waitForTitle("Ranking - Web Forum");
+
+		String id = String.format("%sPos", login);
+		WebElement posElement = _driver.findElement(By.id(id));
+		assertEquals(position, posElement.getText());
+
+		id = String.format("%sLogin", login);
+		WebElement loginElement = _driver.findElement(By.id(id));
+		assertEquals(login, loginElement.getText());
+
+		id = String.format("%sPoints", login);
+		WebElement pointsElement = _driver.findElement(By.id(id));
+		assertEquals(points, pointsElement.getText());
+	}
 }
