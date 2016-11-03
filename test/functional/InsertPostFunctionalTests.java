@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.Set;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 
 public class InsertPostFunctionalTests extends FunctionalTests {
@@ -25,13 +24,10 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	@Test
 	public void createNewPostEmptyTitle() throws Exception {
 		setupDatabase("only_user.xml");
+		loginUser("mauricio", "p4$$w0rd");
 
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-
-		_driver.findElement(By.linkText("+ New Post")).click();
+		clickItemByText("+ New Post");
 		waitForTitle("New Post - Web Forum");
-
 		fillAndSubmitPostForm("", "Any Content");
 
 		expectInvalidInputField("title");
@@ -41,12 +37,10 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void createNewPostEmptyContent() throws Exception {
 		setupDatabase("only_user.xml");
 
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
 
-		_driver.findElement(By.linkText("+ New Post")).click();
+		clickItemByText("+ New Post");
 		waitForTitle("New Post - Web Forum");
-
 		fillAndSubmitPostForm("Title", "");
 
 		expectInvalidTextArea("content");
@@ -55,41 +49,34 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	@Test
 	public void createNewPost() throws Exception {
 		setupDatabase("only_user.xml");
+		loginUser("mauricio", "p4$$w0rd");
 
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-
-		_driver.findElement(By.linkText("+ New Post")).click();
+		clickItemByText("+ New Post");
 		waitForTitle("New Post - Web Forum");
-
 		fillAndSubmitPostForm("First Post", "First Post Content");
 		waitForTitle("Posts - Web Forum");
 
-		String title = _driver.findElement(By.cssSelector("p.list-item-title")).getText();
-		assertEquals("First Post", title);
+		openPostByTitle("First Post");
 	}
 
 	@Test
 	public void createNewPostWithSpecialCharacters() throws Exception {
 		setupDatabase("only_user.xml");
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-		_driver.findElement(By.linkText("+ New Post")).click();
+		loginUser("mauricio", "p4$$w0rd");
+		clickItemByText("+ New Post");
 		waitForTitle("New Post - Web Forum");
 
 		fillAndSubmitPostForm("Fírßt Pøsŧ", "Fírst Pøst ©ont€nt");
 		waitForTitle("Posts - Web Forum");
 
-		String title = _driver.findElement(By.cssSelector("p.list-item-title")).getText();
-		assertEquals("Fírßt Pøsŧ", title);
+		openPostByTitle("Fírßt Pøsŧ");
 	}
 
 	@Test
 	public void postInsertionWithoutTitle() throws Exception {
 		setupDatabase("only_user.xml");
 
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
 
 		Set<Cookie> cookies = _driver.manage().getCookies();
 		assertEquals(400, sendPost("insert", "content=content", cookies));
@@ -99,8 +86,7 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void postInsertionEmptyTitle() throws Exception {
 		setupDatabase("only_user.xml");
 
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
 
 		Set<Cookie> cookies = _driver.manage().getCookies();
 		assertEquals(400, sendPost("insert", "title&content=content", cookies));
@@ -110,8 +96,7 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void postInsertionWithoutContent() throws Exception {
 		setupDatabase("only_user.xml");
 
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
 
 		Set<Cookie> cookies = _driver.manage().getCookies();
 		assertEquals(400, sendPost("insert", "title=title", cookies));
@@ -121,8 +106,7 @@ public class InsertPostFunctionalTests extends FunctionalTests {
 	public void postInsertionEmptyContent() throws Exception {
 		setupDatabase("only_user.xml");
 
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
 
 		Set<Cookie> cookies = _driver.manage().getCookies();
 		assertEquals(400, sendPost("insert", "title=title&content", cookies));

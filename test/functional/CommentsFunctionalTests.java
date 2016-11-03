@@ -5,53 +5,37 @@ import static org.junit.Assert.assertEquals;
 import java.util.Set;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class CommentsFunctionalTests extends FunctionalTests {
 
 	@Test
 	public void createNewComment() throws Exception {
 		setupDatabase("only_post.xml");
-
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-
-		_driver.findElement(By.cssSelector("p.list-item-title")).click();
-		waitForTitle("First Post - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
+		openPostByTitle("First Post");
 
 	    fillAndSubmitCommentForm("First Comment");
-	    _wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.topic-cmt")));
 
-	    String comment = _driver.findElement(By.cssSelector("p.topic-cmt-text")).getText();
-		assertEquals("First Comment", comment);
+	    waitForCommentToBeDisplayed("First Comment", "mauricio");
 	}
 
 	@Test
 	public void createNewCommentWithSpecialCharacters() throws Exception {
 		setupDatabase("only_post.xml");
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-		_driver.findElement(By.cssSelector("p.list-item-title")).click();
-		waitForTitle("First Post - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
+		openPostByTitle("First Post");
 
 	    fillAndSubmitCommentForm("Fírßt Cømm€nŧ");
-	    _wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.topic-cmt")));
 
-	    String comment = _driver.findElement(By.cssSelector("p.topic-cmt-text")).getText();
-		assertEquals("Fírßt Cømm€nŧ", comment);
+	    waitForCommentToBeDisplayed("Fírßt Cømm€nŧ", "mauricio");
 	}
 
 	@Test
 	public void submitEmptyComment() throws Exception {
 		setupDatabase("only_post.xml");
-
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-
-		_driver.findElement(By.cssSelector("p.list-item-title")).click();
-		waitForTitle("First Post - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
+		openPostByTitle("First Post");
 
 	    fillAndSubmitCommentForm("");
 
@@ -61,12 +45,8 @@ public class CommentsFunctionalTests extends FunctionalTests {
 	@Test
 	public void postCommentWithoutContent() throws Exception {
 		setupDatabase("only_post.xml");
-
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-
-		_driver.findElement(By.cssSelector("p.list-item-title")).click();
-		waitForTitle("First Post - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
+		openPostByTitle("First Post");
 
 		String params = String.format("postId=%s", getPostIdFromCurrentURL());
 		Set<Cookie> cookies = _driver.manage().getCookies();
@@ -76,12 +56,8 @@ public class CommentsFunctionalTests extends FunctionalTests {
 	@Test
 	public void postCommentWithEmptyContent() throws Exception {
 		setupDatabase("only_post.xml");
-
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-
-		_driver.findElement(By.cssSelector("p.list-item-title")).click();
-		waitForTitle("First Post - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
+		openPostByTitle("First Post");
 
 		String params = String.format("postId=%s&comment=", getPostIdFromCurrentURL());
 		Set<Cookie> cookies = _driver.manage().getCookies();

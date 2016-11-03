@@ -10,7 +10,6 @@ public class RegisterFunctionalTests extends FunctionalTests {
 	public void registerNewUser() throws Exception {
 		setupDatabase("empty_db.xml");
 
-		goToPage("register");
 		fillAndSubmitRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
 		waitForTitle("Login - Web Forum");
 
@@ -21,7 +20,6 @@ public class RegisterFunctionalTests extends FunctionalTests {
 	public void registerExistingUser() throws Exception {
 		setupDatabase("only_user.xml");
 
-		goToPage("register");
 		fillAndSubmitRegisterForm("mauricio", "p4$$w0rd", "Mauricio Freitas", "mauricio@mail.com");
 		waitUntilErrorMessage("Login already registered");
 	}
@@ -30,14 +28,12 @@ public class RegisterFunctionalTests extends FunctionalTests {
 	public void registerUserWithShortPassword() throws Exception {
 		setupDatabase("empty_db.xml");
 
-		goToPage("register");
 		fillAndSubmitRegisterForm("mauricio", "123457", "Mauricio Freitas", "mauricio@mail.com");
 		waitUntilErrorMessage("Password too short");
 	}
 
 	@Test
 	public void registerEmptyLogin() throws Exception {
-		goToPage("register");
 		fillAndSubmitRegisterForm("", "", "", "");
 
 		expectInvalidInputField("login");
@@ -45,7 +41,6 @@ public class RegisterFunctionalTests extends FunctionalTests {
 
 	@Test
 	public void registerEmptyPassword() throws Exception {
-		goToPage("register");
 		fillAndSubmitRegisterForm("mauricio", "", "", "");
 
 		expectInvalidInputField("password");

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.Set;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 
 public class RankingFunctionalTests extends FunctionalTests {
@@ -30,10 +29,8 @@ public class RankingFunctionalTests extends FunctionalTests {
 	@Test
 	public void upVotePost() throws Exception {
 		setupDatabase("post_with_5_votes.xml");
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-		_driver.findElement(By.cssSelector("p.list-item-title")).click();
-		waitForTitle("First Post - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
+		openPostByTitle("First Post");
 
 		clickItemByID("rUpvote");
 
@@ -44,10 +41,8 @@ public class RankingFunctionalTests extends FunctionalTests {
 	@Test
 	public void downVotePost() throws Exception {
 		setupDatabase("post_with_5_votes.xml");
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-		_driver.findElement(By.cssSelector("p.list-item-title")).click();
-		waitForTitle("First Post - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
+		openPostByTitle("First Post");
 
 		clickItemByID("rDownvote");
 
@@ -59,8 +54,7 @@ public class RankingFunctionalTests extends FunctionalTests {
 	public void rankingOrder() throws Exception {
 		setupDatabase("three_users.xml");
 
-		fillAndSubmitLoginForm("maria", "maria1234");
-		waitForTitle("Posts - Web Forum");
+		loginUser("maria", "maria1234");
 
 		verifyRankingPosition("joao", "1", "15");
 		verifyRankingPosition("maria", "2", "10");
@@ -76,10 +70,8 @@ public class RankingFunctionalTests extends FunctionalTests {
 	@Test
 	public void postInvalidVote() throws Exception {
 		setupDatabase("post_with_5_votes.xml");
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
-		_driver.findElement(By.cssSelector("p.list-item-title")).click();
-		waitForTitle("First Post - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
+		openPostByTitle("First Post");
 
 		String params = String.format("post_id=%s&vote=invalid", getPostIdFromCurrentURL());
 		Set<Cookie> cookies = _driver.manage().getCookies();
@@ -89,8 +81,7 @@ public class RankingFunctionalTests extends FunctionalTests {
 	@Test
 	public void postInvalidPostId() throws Exception {
 		setupDatabase("post_with_5_votes.xml");
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
 
 		String params = "post_id=invalid&vote=up";
 		Set<Cookie> cookies = _driver.manage().getCookies();
@@ -100,8 +91,7 @@ public class RankingFunctionalTests extends FunctionalTests {
 	@Test
 	public void postInexistingPostId() throws Exception {
 		setupDatabase("post_with_5_votes.xml");
-		fillAndSubmitLoginForm("mauricio", "p4$$w0rd");
-		waitForTitle("Posts - Web Forum");
+		loginUser("mauricio", "p4$$w0rd");
 
 		String params = "post_id=0&vote=up";
 		Set<Cookie> cookies = _driver.manage().getCookies();

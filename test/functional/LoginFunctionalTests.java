@@ -16,7 +16,6 @@ public class LoginFunctionalTests extends FunctionalTests {
 	@Test
 	public void loginUserWithSpecialCharacters() throws Exception {
 		setupDatabase("empty_db.xml");
-		goToPage("register");
 		fillAndSubmitRegisterForm("maurício", "p4ßwórd_", "", "");
 		waitForTitle("Login - Web Forum");
 		assertRegisterMessage("New account created successfully");
