@@ -12,15 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import model.posts.Post;
 import model.posts.PostDAO;
 import model.posts.PostManager;
-import model.users.AuthenticationError;
-import model.users.UserDAO;
-import model.users.UserManager;
 
 @WebServlet("/insert")
 public class InsertController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	private static final int PONTOS_POR_TOPICO = 10;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,14 +53,6 @@ public class InsertController extends HttpServlet {
 
 		PostDAO postMgmt = new PostManager();
 		postMgmt.insert(new Post(title, content, (String) login));
-
-		UserDAO userMgmt = new UserManager();
-		try {
-			userMgmt.addPoints((String) login, PONTOS_POR_TOPICO);
-		} catch (AuthenticationError e) {
-			response.sendRedirect("logout");
-			return;
-		}
 
 		response.sendRedirect("posts");
 	}

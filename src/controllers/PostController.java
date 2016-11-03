@@ -16,14 +16,10 @@ import model.comments.CommentsDAO;
 import model.posts.InvalidPost;
 import model.posts.PostDAO;
 import model.posts.PostManager;
-import model.users.AuthenticationError;
-import model.users.UserDAO;
-import model.users.UserManager;
 
 @WebServlet("/post")
 public class PostController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final int POINTS_PER_COMMENT = 3;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -85,14 +81,6 @@ public class PostController extends HttpServlet {
 		CommentsDAO cmntMgmt = new CommentManager();
 		Comment cmnt = new Comment(comment, (String) login, postId);
 		cmntMgmt.addComment(cmnt);
-
-		UserDAO userMgmt = new UserManager();
-		try {
-			userMgmt.addPoints((String) login, POINTS_PER_COMMENT);
-		} catch (AuthenticationError e) {
-			response.sendRedirect("logout");
-			return;
-		}
 
 		response.sendRedirect(String.format("post?id=%d", postId));
 	}
