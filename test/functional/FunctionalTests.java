@@ -184,4 +184,29 @@ public class FunctionalTests {
 		String regMessage = _driver.findElement(By.id("reg_msg")).getText();
 		assertEquals(message, regMessage);
 	}
+
+	protected void clickItemByID(String id) {
+		_driver.findElement(By.id(id)).click();
+	}
+
+	protected void waitForNumberOfVotes(String votes) {
+		_wait.until(ExpectedConditions.textToBe(By.id("votes"), votes));
+	}
+
+	protected void verifyRankingPosition(String login, String position, String points) {
+		goToPage("ranking");
+		waitForTitle("Ranking - Web Forum");
+
+		String id = String.format("%sPos", login);
+		WebElement posElement = _driver.findElement(By.id(id));
+		assertEquals(position, posElement.getText());
+
+		id = String.format("%sLogin", login);
+		WebElement loginElement = _driver.findElement(By.id(id));
+		assertEquals(login, loginElement.getText());
+
+		id = String.format("%sPoints", login);
+		WebElement pointsElement = _driver.findElement(By.id(id));
+		assertEquals(points, pointsElement.getText());
+	}
 }

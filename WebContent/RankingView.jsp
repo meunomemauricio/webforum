@@ -19,9 +19,9 @@
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 		<c:forEach var="pos" items="${ranking}" varStatus="loop">
 			<div class="ranking-row">
-				<div class="ranking-cell">${loop.count}</div>
-				<div class="ranking-cell">${pos.getLogin()}</div>
-				<div class="ranking-cell">${pos.getPoints()}</div>
+				<div id="${pos.getLogin()}Pos" class="ranking-cell">${loop.count}</div>
+				<div id="${pos.getLogin()}Login" class="ranking-cell">${pos.getLogin()}</div>
+				<div id="${pos.getLogin()}Points" class="ranking-cell">${pos.getPoints()}</div>
 			</div>
 		</c:forEach>
 	</div>

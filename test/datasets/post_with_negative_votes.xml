@@ -1,0 +1,5 @@
+<dataset>
+	<users login="mauricio" name="Mauricio Freitas" email="mauricio@mail.com" pwhash="14CyYPXELtgg3Iuks/ZB53R2D9jfxph0ivNhV5Abr1EMpfnbFA05hQmghpah+L/Y+7GdkNC5wIb6c0NQgZ651Q==" salt="salt" points="-5"/>
+	<posts title="First Post" content="First Post Content" login="mauricio" votes="-5"/>
+	<comments />
+</dataset>

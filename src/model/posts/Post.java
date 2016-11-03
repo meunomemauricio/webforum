@@ -6,19 +6,22 @@ public class Post {
 	private String _title;
 	private String _content;
 	private String _login;
+	private int _votes;
 
-	public Post(String _title, String _content, String _login) {
-		this._title = _title;
-		this._content = _content;
-		this._login = _login;
+	public Post(String title, String content, String login) {
+		this._title = title;
+		this._content = content;
+		this._login = login;
 		_id = 0;
+		_votes = 0;
 	}
 
-	public Post(int _id, String _title, String _content, String _login) {
-		this._id = _id;
-		this._title = _title;
-		this._content = _content;
-		this._login = _login;
+	public Post(int id, String title, String content, String login, int votes) {
+		this._id = id;
+		this._title = title;
+		this._content = content;
+		this._login = login;
+		this._votes = votes;
 	}
 
 	public int getId() {
@@ -35,6 +38,10 @@ public class Post {
 
 	public String getLogin() {
 		return _login;
+	}
+
+	public int getVotes() {
+		return _votes;
 	}
 
 	@Override

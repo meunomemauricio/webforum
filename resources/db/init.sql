@@ -27,6 +27,7 @@ CREATE TABLE posts
   title text,
   content text,
   login text,
+  votes integer DEFAULT 0,
   CONSTRAINT post_pkey PRIMARY KEY (post_id),
   CONSTRAINT post_login_fkey FOREIGN KEY (login)
       REFERENCES users (login) MATCH SIMPLE

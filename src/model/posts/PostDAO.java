@@ -10,4 +10,5 @@ public interface PostDAO {
 
 	public List<Post> listPosts();
 
+	public void addVotes(int id, int ammount) throws InvalidPost;
 }

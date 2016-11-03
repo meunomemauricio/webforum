@@ -91,6 +91,52 @@ public class TestPosts {
 		} catch (InvalidPost e) {};
 	}
 
+	@Test
+	public void addVotesToExistingPost() throws Exception {
+		setupDatabase("only_post.xml");
+		List<Post> posts = _postMgmt.listPosts();
+		Post post = posts.get(0);
+		int id = post.getId();
+
+		_postMgmt.addVotes(id, 5);
+
+        assertDatabase("post_with_5_votes.xml");
+	}
+
+	@Test
+	public void incrementExistingPoints() throws Exception {
+		setupDatabase("post_with_5_votes.xml");
+		List<Post> posts = _postMgmt.listPosts();
+		Post post = posts.get(0);
+		int id = post.getId();
+
+		_postMgmt.addVotes(id, 5);
+
+		assertDatabase("post_with_10_votes.xml");
+	}
+
+	@Test
+	public void negativeVotes() throws Exception {
+		setupDatabase("post_with_5_votes.xml");
+		List<Post> posts = _postMgmt.listPosts();
+		Post post = posts.get(0);
+		int id = post.getId();
+
+		_postMgmt.addVotes(id, -10);
+
+		assertDatabase("post_with_negative_votes.xml");
+	}
+
+	@Test
+	public void addVotesToInvalidPost() {
+		setupDatabase("empty_db.xml");
+
+		try {
+			_postMgmt.addVotes(0, 5);
+			fail("Should not be able to add votes.");
+		} catch (InvalidPost e) {}
+	}
+
 	private void setupDatabase(String file) {
 		DataFileLoader loader = new FlatXmlDataFileLoader();
 		IDataSet dataSet = loader.load(String.format("/datasets/%s", file));
@@ -105,15 +151,11 @@ public class TestPosts {
 	private void assertDatabase(String file) {
 		try {
 			IDataSet databaseDataSet = _jdt.getConnection().createDataSet();
-			ITable actualTable = databaseDataSet.getTable("users");
 			IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(
 					new File(String.format("test//datasets/%s", file)));
 
-			ITable expectedTable = expectedDataSet.getTable("users");
-			Assertion.assertEquals(expectedTable, actualTable);
-
-			actualTable = databaseDataSet.getTable("posts");
-			expectedTable = expectedDataSet.getTable("posts");
+			ITable actualTable = databaseDataSet.getTable("posts");
+			ITable expectedTable = expectedDataSet.getTable("posts");
 			// It's necessary to exclude the post_id column from verification
 			ITable filteredTable = DefaultColumnFilter.includedColumnsTable(
 					actualTable, expectedTable.getTableMetaData().getColumns());
@@ -122,6 +164,4 @@ public class TestPosts {
 			throw new RuntimeException("Não foi possível verificar Tabela:" + e);
 		}
 	}
-
-
 }
