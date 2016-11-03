@@ -56,6 +56,18 @@ public class RankingFunctionalTests extends FunctionalTests {
 	}
 
 	@Test
+	public void rankingOrder() throws Exception {
+		setupDatabase("three_users.xml");
+
+		fillAndSubmitLoginForm("maria", "maria1234");
+		waitForTitle("Posts - Web Forum");
+
+		verifyRankingPosition("joao", "1", "15");
+		verifyRankingPosition("maria", "2", "10");
+		verifyRankingPosition("jose", "3", "5");
+	}
+
+	@Test
 	public void postWithoutLogin() throws Exception {
 		String params = "post_id=0&vote=up";
 		assertEquals(400, sendPost("vote", params));
