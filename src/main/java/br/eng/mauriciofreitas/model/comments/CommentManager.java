@@ -13,6 +13,10 @@ public class CommentManager implements CommentsDAO {
 	private final String insertQuery = "INSERT INTO comments(content, login, post_id) VALUES (?, ?, ?);";
 	private final String recoverQuery = "SELECT * FROM comments WHERE post_id=? ORDER BY comment_id ASC;";
 
+	private final String db_loc = "jdbc:postgresql:" + System.getenv("WEBFORUM_DB_LOC");
+	private final String db_user = System.getenv("WEBFORUM_DB_USER");
+	private final String db_pw = System.getenv("WEBFORUM_DB_PW");
+
 	static {
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -23,9 +27,7 @@ public class CommentManager implements CommentsDAO {
 
 	@Override
 	public void addComment(Comment cmnt) {
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(insertQuery);
 			stm.setString(1, cmnt.getContent());
 			stm.setString(2, cmnt.getLogin());
@@ -39,9 +41,7 @@ public class CommentManager implements CommentsDAO {
 	@Override
 	public List<Comment> retrieveComments(int postId) {
 		List<Comment> comments = new ArrayList<>();
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(recoverQuery);
 			stm.setInt(1, postId);
 			ResultSet rs = stm.executeQuery();

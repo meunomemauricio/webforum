@@ -15,6 +15,10 @@ public class UserManager implements UserDAO {
 	private final String addPointQuery = "UPDATE users SET points = points + ? WHERE login = ?;";
 	private final String rankingQuery = "SELECT * FROM users ORDER BY points DESC;";
 
+	private final String db_loc = "jdbc:postgresql:" + System.getenv("WEBFORUM_DB_LOC");
+	private final String db_user = System.getenv("WEBFORUM_DB_USER");
+	private final String db_pw = System.getenv("WEBFORUM_DB_PW");
+
 	static {
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -31,10 +35,7 @@ public class UserManager implements UserDAO {
 		} catch (AuthenticationError e) {}
 
 		u.genPasswordHash(password);
-
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(insertQuery);
 			stm.setString(1, u.getLogin());
 			stm.setString(2, u.getEmail());
@@ -50,9 +51,7 @@ public class UserManager implements UserDAO {
 
 	@Override
 	public User retrieve(String login) throws AuthenticationError {
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(retrieveQuery);
 			stm.setString(1, login);
 			ResultSet rs = stm.executeQuery();
@@ -74,10 +73,7 @@ public class UserManager implements UserDAO {
 	public void addPoints(String login, int points) throws AuthenticationError {
 		retrieve(login);
 
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
-
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(addPointQuery);
 			stm.setInt(1, points);
 			stm.setString(2, login);
@@ -91,9 +87,7 @@ public class UserManager implements UserDAO {
 	@Override
 	public List<User> rankUsers() {
 		List<User> ranking = new ArrayList<>();
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(rankingQuery);
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {

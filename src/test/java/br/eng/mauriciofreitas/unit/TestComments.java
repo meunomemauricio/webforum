@@ -26,12 +26,13 @@ public class TestComments {
 	private PostDAO _postMgmt = new PostManager();
 	private CommentsDAO _cmntMgmt = new CommentManager();
 
+	private final String db_loc = "jdbc:postgresql:" + System.getenv("WEBFORUM_DB_LOC");
+	private final String db_user = System.getenv("WEBFORUM_DB_USER");
+	private final String db_pw = System.getenv("WEBFORUM_DB_PW");
+
 	@Before
 	public void setUp() throws Exception {
-		_jdt = new JdbcDatabaseTester(
-				"org.postgresql.Driver",
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin");
+		_jdt = new JdbcDatabaseTester("org.postgresql.Driver", db_loc, db_user, db_pw);
 	}
 
 	@Test

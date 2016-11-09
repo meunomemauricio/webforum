@@ -37,6 +37,10 @@ public class FunctionalTests {
 
 	protected static JdbcDatabaseTester _jdt;
 
+	private final String db_loc = "jdbc:postgresql:" + System.getenv("WEBFORUM_DB_LOC");
+	private final String db_user = System.getenv("WEBFORUM_DB_USER");
+	private final String db_pw = System.getenv("WEBFORUM_DB_PW");
+
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
@@ -45,10 +49,7 @@ public class FunctionalTests {
 
 		_wait = new WebDriverWait(_driver, 5);
 
-		_jdt = new JdbcDatabaseTester(
-				"org.postgresql.Driver",
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin");
+		_jdt = new JdbcDatabaseTester("org.postgresql.Driver", db_loc, db_user, db_pw);
 	}
 
 	@Before

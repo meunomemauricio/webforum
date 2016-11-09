@@ -15,6 +15,10 @@ public class PostManager implements PostDAO {
 	private final String recuperaQuery = "SELECT * FROM posts WHERE post_id=?;";
 	private final String addPointQuery = "UPDATE posts SET votes = votes + ? WHERE post_id = ?;";
 
+	private final String db_loc = "jdbc:postgresql:" + System.getenv("WEBFORUM_DB_LOC");
+	private final String db_user = System.getenv("WEBFORUM_DB_USER");
+	private final String db_pw = System.getenv("WEBFORUM_DB_PW");
+
 	static {
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -25,9 +29,7 @@ public class PostManager implements PostDAO {
 
 	@Override
 	public void insert(Post post) {
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(insertQuery);
 			stm.setString(1, post.getTitle());
 			stm.setString(2, post.getContent());
@@ -42,9 +44,7 @@ public class PostManager implements PostDAO {
 	@Override
 	public List<Post> listPosts() {
 		List<Post> posts = new ArrayList<>();
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(listQuery);
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
@@ -63,9 +63,7 @@ public class PostManager implements PostDAO {
 
 	@Override
 	public Post retrieve(int id) throws InvalidPost {
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(recuperaQuery);
 			stm.setInt(1, id);
 			ResultSet rs = stm.executeQuery();
@@ -86,9 +84,7 @@ public class PostManager implements PostDAO {
 	public void addVotes(int id, int ammount) throws InvalidPost {
 		retrieve(id);
 
-		try(Connection con = DriverManager.getConnection(
-				"jdbc:postgresql://localhost/coursera",
-				"postgres", "admin")) {
+		try(Connection con = DriverManager.getConnection(db_loc, db_user, db_pw)) {
 			PreparedStatement stm = con.prepareStatement(addPointQuery);
 			stm.setInt(1, ammount);
 			stm.setInt(2, id);

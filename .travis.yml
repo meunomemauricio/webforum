@@ -1,0 +1,13 @@
+language: java
+
+sudo: false
+
+jdk:
+  - oraclejdk8
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database webforum;' -U postgres
+  - psql -d webforum -U postgres -f resources/db/init.sql
