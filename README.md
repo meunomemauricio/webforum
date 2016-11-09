@@ -1,5 +1,7 @@
 # Web Forum
 
+[![Build Status](https://travis-ci.org/meunomemauricio/webforum.svg?branch=master)](https://travis-ci.org/meunomemauricio/webforum)
+
 This is a simple Web Forum using Java Servlets and PostgreSQL.
 
 It was created as the final peer-reviewed assignment for a [MOOC on Java advanced concepts](https://www.coursera.org/learn/desenvolvimento-agil-com-java-avancado/) on Coursera.
