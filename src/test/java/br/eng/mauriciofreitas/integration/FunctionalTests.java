@@ -1,4 +1,4 @@
-package functional;
+package br.eng.mauriciofreitas.integration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -6,6 +6,8 @@ import static org.junit.Assert.fail;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -15,56 +17,171 @@ import org.dbunit.JdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.util.fileloader.DataFileLoader;
 import org.dbunit.util.fileloader.FlatXmlDataFileLoader;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.rules.TestName;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.saucelabs.saucerest.SauceREST;
+
 public class FunctionalTests {
 
-	protected static WebDriver _driver;
-	protected static WebDriverWait _wait;
+	protected static WebDriver localDriver;
 
-	protected static final String baseUrl = "http://localhost:8080/WebForum/";;
+	protected WebDriver _driver;
+	protected WebDriverWait _wait;
 
-	protected static StringBuffer verificationErrors = new StringBuffer();
-
-	protected static JdbcDatabaseTester _jdt;
+	protected final String baseUrl = "http://localhost:8080/";;
 
 	private final String db_loc = "jdbc:postgresql:" + System.getenv("WEBFORUM_DB_LOC");
 	private final String db_user = System.getenv("WEBFORUM_DB_USER");
 	private final String db_pw = System.getenv("WEBFORUM_DB_PW");
 
+	protected JdbcDatabaseTester _jdt;
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-		_driver = new FirefoxDriver();
+	private String _sessionId;
+	private SauceREST _sauceREST;
+
+
+	@Rule
+    public TestName name = new TestName();
+
+	@Rule
+	public TestRule watcher = new TestWatcher() {
+		@Override
+		protected void succeeded(Description description) {
+			setSauceJobAsPassed();
+		}
+	};
+
+	/**
+	 * Update the Sauce Labs Job information setting the test as passed.
+	 */
+	private void setSauceJobAsPassed() {
+		if (_sauceREST != null) {
+			Map<String, Object> updates = new HashMap<String, Object>();
+			updates.put("passed", true);
+			updates.put("build", System.getenv("TRAVIS_BUILD_NUMBER"));
+			_sauceREST.updateJobInfo(_sessionId, updates);
+		}
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		_driver = getDriver();
+		_sessionId = ((RemoteWebDriver)_driver).getSessionId().toString();
 		_driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
 		_wait = new WebDriverWait(_driver, 5);
 
 		_jdt = new JdbcDatabaseTester("org.postgresql.Driver", db_loc, db_user, db_pw);
+
+		// Make sure user is not logged from a test before when running a local driver
+		_driver.manage().deleteAllCookies();
 	}
 
-	@Before
-	public void setUp() throws Exception {
-		// Make sure user is not logged from the test before
-		goToPage("logout");
+	/**
+	 * Verify if the tests are being executed locally or in the Travis CI environment.
+	 *
+	 * @return the proper WebDriver object depending on the case.
+	 */
+	private WebDriver getDriver() throws Exception {
+		if (System.getenv("TRAVIS") != null)
+			return getRemoteDriver();
+		else
+			return getLocalDriver();
 	}
 
+	/**
+	 * Creates a Remote Web Driver pointing to Sauce Labs.
+	 *
+	 * Both the Username and Access Key are taken from the SAUCE_USERNAME and "SAUCE_ACCESS_KEY"
+	 * environment variables, provided by Travis CI.
+	 *
+	 * The connection is made through a tunnel, configured on the .travis.yml file.
+	 *
+	 * @return the newly create RemoteWebDriver.
+	 * @throws Exception
+	 */
+	private WebDriver getRemoteDriver() throws Exception{
+		String uname = System.getenv("SAUCE_USERNAME");
+		String key = System.getenv("SAUCE_ACCESS_KEY");
+		URL url = new URL(String.format("http://%s:%s@localhost:4445/wd/hub", uname, key));
+
+		DesiredCapabilities caps = DesiredCapabilities.firefox();
+		caps.setCapability("tunnel-identifier", System.getenv("TRAVIS_JOB_NUMBER"));
+		caps.setCapability("build", System.getenv("TRAVIS_BUILD_NUMBER"));
+		caps.setCapability("platform", "Windows 10");
+        caps.setCapability("name", name.getMethodName());
+
+        if (_sauceREST == null)
+			_sauceREST = new SauceREST(uname, key);
+
+		return new RemoteWebDriver(url, caps);
+	}
+
+	/**
+	 * Get a instance of a driver running locally.
+	 *
+	 * When running the driver locally, it takes a long time to open a new window for every
+	 * testcase, so this method stores a stance in the localDriver static attribute and shares it
+	 * between tests of the same suite.
+	 *
+	 * @return a WebDriver instance.
+	 */
+	private WebDriver getLocalDriver() {
+		if (localDriver == null || hasLocalDriverQuit()) {
+			String geckoDrvPath = System.getenv("GECKO_DRV_PATH");
+			if (geckoDrvPath == null)
+				fail("$GECKO_DRV_PATH Environment variable not set.");
+			System.setProperty("webdriver.gecko.driver", geckoDrvPath);
+
+			localDriver = new FirefoxDriver();
+		}
+		return localDriver;
+	}
+
+	/**
+	 * Check if the quit method has been issued in a WebDriver.
+	 *
+	 * @return true if it has quited.
+	 */
+	public boolean hasLocalDriverQuit() {
+	    return ((RemoteWebDriver)localDriver).getSessionId() == null;
+	}
+
+	/**
+	 * Quit the instance driver for every testcase only if it's not local.
+	 *
+	 * @throws Exception
+	 */
+	@After
+	public void tearDown() throws Exception {
+		if (localDriver == null)
+			_driver.quit();
+	}
+
+	/**
+	 * Quit the localDriver instance if it has ever been spawned.
+	 * @throws Exception
+	 */
 	@AfterClass
 	public static void tearDownClass() throws Exception {
-		_driver.quit();
-		String verificationErrorString = verificationErrors.toString();
-		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
-		}
+		if (localDriver != null)
+			localDriver.quit();
 	}
 
 	// Database Methods

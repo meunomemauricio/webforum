@@ -1,10 +1,10 @@
-package functional;
+package br.eng.mauriciofreitas.integration;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class RegisterFunctionalTests extends FunctionalTests {
+public class ITRegister extends FunctionalTests {
 
 	@Test
 	public void registerNewUser() throws Exception {

@@ -1,6 +1,7 @@
 # Web Forum
 
 [![Build Status](https://travis-ci.org/meunomemauricio/webforum.svg?branch=master)](https://travis-ci.org/meunomemauricio/webforum)
+[![Build Status](https://saucelabs.com/buildstatus/meunomemauricio)](https://saucelabs.com/u/meunomemauricio)
 
 This is a simple Web Forum using Java Servlets and PostgreSQL.
 

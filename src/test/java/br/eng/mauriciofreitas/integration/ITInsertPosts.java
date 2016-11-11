@@ -1,4 +1,4 @@
-package functional;
+package br.eng.mauriciofreitas.integration;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,7 +7,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.openqa.selenium.Cookie;
 
-public class InsertPostFunctionalTests extends FunctionalTests {
+public class ITInsertPosts extends FunctionalTests {
 
 	@Test
 	public void postListPageWithoutLogin() throws Exception {

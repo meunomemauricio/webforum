@@ -1,4 +1,4 @@
-package functional;
+package br.eng.mauriciofreitas.integration;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,7 +7,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.openqa.selenium.Cookie;
 
-public class CommentsFunctionalTests extends FunctionalTests {
+public class ITComments extends FunctionalTests {
 
 	@Test
 	public void createNewComment() throws Exception {

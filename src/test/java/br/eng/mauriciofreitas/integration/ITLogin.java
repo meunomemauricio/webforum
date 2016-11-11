@@ -1,8 +1,8 @@
-package functional;
+package br.eng.mauriciofreitas.integration;
 
 import org.junit.Test;
 
-public class LoginFunctionalTests extends FunctionalTests {
+public class ITLogin extends FunctionalTests {
 
 	@Test
 	public void sucessfulLogin() throws Exception {

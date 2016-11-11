@@ -1,4 +1,4 @@
-package functional;
+package br.eng.mauriciofreitas.integration;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,7 +7,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.openqa.selenium.Cookie;
 
-public class RankingFunctionalTests extends FunctionalTests {
+public class ITRanking extends FunctionalTests {
 
 	/**
 	 * Try to GET the vote page after login

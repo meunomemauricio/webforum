@@ -8,6 +8,14 @@ jdk:
 services:
   - postgresql
 
+addons:
+  sauce_connect:
+    username: "meunomemauricio"
+    access_key:
+      secure: "C6Tne0efJCd49m65wiEegHf4ddiuJAhYpJrkKwCssHoBXxAhFOVG022dYpRqlF1MkZsEiVHvTjgrwm3J3wCk7HZPseSHo2zH+pifbkMfZ/HDZ+qeAiJP/OATEuFZ/a05subhFlXbrbwUJpngqDp0aymMPeosWKTVIz+ez0kNYJW8GP0hAgX11WslNclU5unDRjExjylZO65Lkr+AlXJnXo7f8IK504WLIXevDtpeB1bADkv7wb4df6GDtTBEnN/WPE0j1BMnoyxoaDdJ4bnyl77vPHEgVpEpxWKIYcj82cO/NYyJe2h2jg3HkIato461NlBjX8owIaOP9SVrQZFDrWvS8SOPjbf1M6d2UOJSlEenpk0KsXZcN4NppGZvJPxzA4i1glJQuXpw0f5N4HM0rJkfyWfYHGZHKXd0avqpPm5WUXnB+hxKi8YD5KkDl/ep3Zdc60SBw13QNGbpf1ZEKTahNZxWFQ8gMQPI4Urf8eYJlPp0YootX6xuCKpbQ9dQF1QPFAgsv67x/PHTttSRqXKL73FTBK4tF6XJgKdB9MLIs9cv5vEWQ3tYrmnLtxH9SghYDkit6XTcr0eKpT6OCaWzlq2egZHJnHEFbngRRhfOEwh/+u2wMMXDXzIQoFCrtzgBfJL0kQ8TWAjl8cIHoY3SXBVm1YWwFD9ZvUhpZr0="
+
 before_script:
   - psql -c 'create database webforum;' -U postgres
   - psql -d webforum -U postgres -f resources/db/init.sql
+
+script: "mvn verify"
